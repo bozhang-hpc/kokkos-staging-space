@@ -53,8 +53,6 @@ struct StagingDataElement {
   KOKKOS_INLINE_FUNCTION
   StagingDataElement(value_type* ptr_) : ptr(nullptr) {}
 
-  /**\brief  Do not support random access right now. */
-  // no operator reloading so far
 
 };
 
@@ -62,23 +60,11 @@ template <class ViewTraits>
 struct StagingViewDataHandle {
   typename ViewTraits::value_type* ptr;
 
-  /**\brief  Do not support random access right now. */
   KOKKOS_INLINE_FUNCTION
   StagingViewDataHandle() : ptr(nullptr) {}
   KOKKOS_INLINE_FUNCTION
   StagingViewDataHandle(typename ViewTraits::value_type* ptr_) : ptr(nullptr) {} 
 
-  /*
-  template <class iType>
-  KOKKOS_INLINE_FUNCTION AtomicDataElement<ViewTraits> operator[](
-      const iType& i) const {
-    return AtomicDataElement<ViewTraits>(ptr + i, AtomicViewConstTag());
-  }
-
-  KOKKOS_INLINE_FUNCTION
-  operator typename ViewTraits::value_type*() const { return ptr; }
-
-  */
 };
 
 template <class Traits>
@@ -114,8 +100,6 @@ public:
 
 private:
   template <class, class...> friend class ViewMapping;
-  // need next line when putting above public into private
-  //template <class, class...> friend class Kokkos::View;
 
   KOKKOS_INLINE_FUNCTION
   ViewMapping(const handle_type& arg_handle, const offset_type& arg_offset)
@@ -220,97 +204,6 @@ public:
   using reference_type = typename ViewDataHandle<Traits>::return_type;
   using pointer_type   = typename Traits::value_type*;
 
-  /** \brief  Query raw pointer to memory */
-  /*
-  KOKKOS_INLINE_FUNCTION constexpr pointer_type data() const {
-    return m_impl_handle.ptr;
-  }
-  */
-
-  //----------------------------------------
-  // The View class performs all rank and bounds checking before
-  // calling these element reference methods.
-
-  /* not support data access now */
-
-  /*
-  KOKKOS_FORCEINLINE_FUNCTION
-  reference_type reference() const { return m_handle[0]; }
-
-  template <typename I0>
-  KOKKOS_FORCEINLINE_FUNCTION
-      typename std::enable_if<std::is_integral<I0>::value &&
-                                  !std::is_same<typename Traits::array_layout,
-                                                Kokkos::LayoutStride>::value,
-                              reference_type>::type
-      reference(const I0 &i0) const {
-    return m_handle(i0, 0);
-  }
-
-  template <typename I0>
-  KOKKOS_FORCEINLINE_FUNCTION
-      typename std::enable_if<std::is_integral<I0>::value &&
-                                  std::is_same<typename Traits::array_layout,
-                                               Kokkos::LayoutStride>::value,
-                              reference_type>::type
-      reference(const I0 &i0) const {
-    return m_handle(i0, 0);
-  }
-
-  template <typename I0, typename I1>
-  KOKKOS_FORCEINLINE_FUNCTION const reference_type
-  reference(const I0 &i0, const I1 &i1) const {
-    const reference_type element = m_handle(i0, m_offset(0, i1));
-    return element;
-  }
-
-  template <typename I0, typename I1, typename I2>
-  KOKKOS_FORCEINLINE_FUNCTION reference_type reference(const I0 &i0,
-                                                       const I1 &i1,
-                                                       const I2 &i2) const {
-    return m_handle(i0, m_offset(0, i1, i2));
-  }
-
-  template <typename I0, typename I1, typename I2, typename I3>
-  KOKKOS_FORCEINLINE_FUNCTION reference_type
-  reference(const I0 &i0, const I1 &i1, const I2 &i2, const I3 &i3) const {
-    return m_handle(i0, m_offset(0, i1, i2, i3));
-  }
-
-  template <typename I0, typename I1, typename I2, typename I3, typename I4>
-  KOKKOS_FORCEINLINE_FUNCTION reference_type reference(const I0 &i0,
-                                                       const I1 &i1,
-                                                       const I2 &i2,
-                                                       const I3 &i3,
-                                                       const I4 &i4) const {
-    return m_handle(i0, m_offset(0, i1, i2, i3, i4));
-  }
-
-  template <typename I0, typename I1, typename I2, typename I3, typename I4,
-            typename I5>
-  KOKKOS_FORCEINLINE_FUNCTION reference_type
-  reference(const I0 &i0, const I1 &i1, const I2 &i2, const I3 &i3,
-            const I4 &i4, const I5 &i5) const {
-    return m_handle(i0, m_offset(0, i1, i2, i3, i4, i5));
-  }
-
-  template <typename I0, typename I1, typename I2, typename I3, typename I4,
-            typename I5, typename I6>
-  KOKKOS_FORCEINLINE_FUNCTION reference_type
-  reference(const I0 &i0, const I1 &i1, const I2 &i2, const I3 &i3,
-            const I4 &i4, const I5 &i5, const I6 &i6) const {
-    return m_handle(i0, m_offset(0, i1, i2, i3, i4, i5, i6));
-  }
-
-  template <typename I0, typename I1, typename I2, typename I3, typename I4,
-            typename I5, typename I6, typename I7>
-  KOKKOS_FORCEINLINE_FUNCTION reference_type
-  reference(const I0 &i0, const I1 &i1, const I2 &i2, const I3 &i3,
-            const I4 &i4, const I5 &i5, const I6 &i6, const I7 &i7) const {
-    return m_handle(i0, m_offset(0, i1, i2, i3, i4, i5, i6, i7));
-  }
-  */
-
   //----------------------------------------
 
 private:
@@ -357,18 +250,6 @@ public:
             ((Kokkos::Impl::ViewCtorProp<void, pointer_type> const&)arg_prop)
                 .value),
         m_impl_offset(std::integral_constant<unsigned, 0>(), arg_layout) {}
-
-  /* not support assign data now */
-
-  /**\brief  Assign data */
-
-  /*
-  KOKKOS_INLINE_FUNCTION
-  void assign_data(pointer_type arg_ptr) {
-    m_impl_handle = handle_type(arg_ptr);
-  }
-
-  */
 
   //----------------------------------------
   /*  Allocate and construct mapped array.
@@ -419,24 +300,6 @@ public:
         dimension_6(), dimension_7());
 
     m_impl_handle = handle_type(reinterpret_cast<pointer_type>(record->data()));
-
-    // do not need it since no actual memory needs to be initialized.
-    /*
-
-    if (alloc_size && alloc_prop::initialize) {
-      // Assume destruction is only required when construction is requested.
-      // The ViewValueFunctor has both value construction and destruction
-      // operators.
-      record->m_destroy = functor_type(
-          static_cast<Kokkos::Impl::ViewCtorProp<void, execution_space> const&>(
-              arg_prop)
-              .value,
-          (value_type*)m_impl_handle, m_impl_offset.span(), alloc_name);
-
-      // Construct values
-      record->m_destroy.construct_shared_allocation();
-    }
-    */
 
     return record;
   

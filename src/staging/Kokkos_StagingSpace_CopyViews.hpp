@@ -92,43 +92,6 @@ inline void deep_copy(
                                          dst_memory_space>::accessible
   };
 
-  // Checking for Overlapping Views. StagingSpace do not need this.
-
-  /*
-  dst_value_type* dst_start = dst.data();
-  dst_value_type* dst_end   = dst.data() + dst.span();
-  src_value_type* src_start = src.data();
-  src_value_type* src_end   = src.data() + src.span();
-  if (((std::ptrdiff_t)dst_start == (std::ptrdiff_t)src_start) &&
-      ((std::ptrdiff_t)dst_end == (std::ptrdiff_t)src_end) &&
-      (dst.span_is_contiguous() && src.span_is_contiguous())) {
-    Kokkos::fence();
-    if (Kokkos::Tools::Experimental::get_callbacks().end_deep_copy != nullptr) {
-      Kokkos::Profiling::endDeepCopy();
-    }
-    return;
-  }
-
-  if ((((std::ptrdiff_t)dst_start < (std::ptrdiff_t)src_end) &&
-       ((std::ptrdiff_t)dst_end > (std::ptrdiff_t)src_start)) &&
-      ((dst.span_is_contiguous() && src.span_is_contiguous()))) {
-    std::string message("Error: Kokkos::deep_copy of overlapping views: ");
-    message += dst.label();
-    message += "(";
-    message += std::to_string((std::ptrdiff_t)dst_start);
-    message += ",";
-    message += std::to_string((std::ptrdiff_t)dst_end);
-    message += ") ";
-    message += src.label();
-    message += "(";
-    message += std::to_string((std::ptrdiff_t)src_start);
-    message += ",";
-    message += std::to_string((std::ptrdiff_t)src_end);
-    message += ") ";
-    Kokkos::Impl::throw_runtime_exception(message);
-  }
-
-  */
 
   // Check for same extents
   if ((src.extent(0) != dst.extent(0)) || (src.extent(1) != dst.extent(1)) ||
@@ -276,44 +239,6 @@ inline void deep_copy(
         Kokkos::Impl::SpaceAccessibility<src_execution_space,
                                          dst_memory_space>::accessible
   };
-
-  // Checking for Overlapping Views. StagingSpace do not need this.
-
-  /*
-  dst_value_type* dst_start = dst.data();
-  dst_value_type* dst_end   = dst.data() + dst.span();
-  src_value_type* src_start = src.data();
-  src_value_type* src_end   = src.data() + src.span();
-  if (((std::ptrdiff_t)dst_start == (std::ptrdiff_t)src_start) &&
-      ((std::ptrdiff_t)dst_end == (std::ptrdiff_t)src_end) &&
-      (dst.span_is_contiguous() && src.span_is_contiguous())) {
-    Kokkos::fence();
-    if (Kokkos::Tools::Experimental::get_callbacks().end_deep_copy != nullptr) {
-      Kokkos::Profiling::endDeepCopy();
-    }
-    return;
-  }
-
-  if ((((std::ptrdiff_t)dst_start < (std::ptrdiff_t)src_end) &&
-       ((std::ptrdiff_t)dst_end > (std::ptrdiff_t)src_start)) &&
-      ((dst.span_is_contiguous() && src.span_is_contiguous()))) {
-    std::string message("Error: Kokkos::deep_copy of overlapping views: ");
-    message += dst.label();
-    message += "(";
-    message += std::to_string((std::ptrdiff_t)dst_start);
-    message += ",";
-    message += std::to_string((std::ptrdiff_t)dst_end);
-    message += ") ";
-    message += src.label();
-    message += "(";
-    message += std::to_string((std::ptrdiff_t)src_start);
-    message += ",";
-    message += std::to_string((std::ptrdiff_t)src_end);
-    message += ") ";
-    Kokkos::Impl::throw_runtime_exception(message);
-  }
-
-  */
 
   // Check for same extents
   if ((src.extent(0) != dst.extent(0)) || (src.extent(1) != dst.extent(1)) ||
