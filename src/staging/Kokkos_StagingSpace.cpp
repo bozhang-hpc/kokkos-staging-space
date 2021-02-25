@@ -1,12 +1,14 @@
 #include <Kokkos_Core.hpp>
 #include <Kokkos_Macros.hpp>
 #include <Kokkos_StagingSpace.hpp>
+#include <dataspaces.h>
 #include <string>
 #include <regex>
 #include <iostream>
 #include <sstream>
 #include <limits>
 #include <unistd.h>
+
 
 namespace Kokkos {
 

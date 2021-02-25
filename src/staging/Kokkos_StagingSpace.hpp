@@ -10,12 +10,7 @@
 #include <Kokkos_Core.hpp>
 #include <impl/Kokkos_SharedAlloc.hpp>
 
-
-
-
 #include <mpi.h>
-#include "dataspaces.h"
-
 
 
 /*--------------------------------------------------------------------------*/

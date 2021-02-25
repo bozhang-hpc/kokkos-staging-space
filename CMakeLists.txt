@@ -30,7 +30,7 @@ target_include_directories(staging PUBLIC $<INSTALL_INTERFACE:include>)
 
 target_link_libraries(staging PUBLIC Kokkos::kokkos)
 target_link_libraries(staging PUBLIC MPI::MPI_CXX)
-target_link_libraries(staging PUBLIC DataSpaces::DataSpaces)
+target_link_libraries(staging PRIVATE DataSpaces::DataSpaces)
 
 include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)

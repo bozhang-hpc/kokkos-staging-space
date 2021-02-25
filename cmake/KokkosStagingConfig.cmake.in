@@ -3,7 +3,7 @@
 # For find_dependency
 include(CMakeFindDependencyMacro)
 
-include("${CMAKE_CURRENT_LIST_DIR}/resilienceTargets.cmake")
+include("${CMAKE_CURRENT_LIST_DIR}/KokkosStagingTargets.cmake")
 
 set(Kokkos_DIR "@Kokkos_DIR@")
 find_dependency(Kokkos REQUIRED NO_CMAKE_PACKAGE_REGISTRY HINTS @Kokkos_DIR@)
