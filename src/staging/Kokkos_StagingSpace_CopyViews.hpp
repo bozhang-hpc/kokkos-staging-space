@@ -2,6 +2,7 @@
 #define KOKKOS_STAGINGSPACE_COPYVIEWS_HPP
 
 #include <Kokkos_Core_fwd.hpp>
+#include <iostream>
 
 namespace Kokkos {
 
@@ -157,8 +158,26 @@ inline void deep_copy(
     Kokkos::Impl::throw_runtime_exception(message);
   }
 
+  bool flag0 = ((src.extent(0) != dst.extent(0)) || (src.extent(1) != dst.extent(1)) ||
+      (src.extent(2) != dst.extent(2)) || (src.extent(3) != dst.extent(3)) ||
+      (src.extent(4) != dst.extent(4)) || (src.extent(5) != dst.extent(5)) ||
+      (src.extent(6) != dst.extent(6)) || (src.extent(7) != dst.extent(7)));
+
+  std::cout<<"KSS_CopyViews.hpp:166 Flag:"<<std::boolalpha<<flag0<<std::endl;
+
   // If same type, equal layout, equal dimensions, equal span, and contiguous
   // memory then can byte-wise copy
+
+  bool flag1 = std::is_same<typename dst_type::value_type,
+                   typename src_type::non_const_value_type>::value;
+  
+  std::cout<<"value_t non_const_value_t Flag:"<<std::boolalpha<<flag1<<std::endl;
+
+  bool flag2 = std::is_same<typename dst_type::array_layout,
+                    typename src_type::array_layout>::value;
+  
+  std::cout<<"array_layout Flag:"<<std::boolalpha<<flag2<<std::endl;
+
 
   if (std::is_same<typename dst_type::value_type,
                    typename src_type::non_const_value_type>::value &&
