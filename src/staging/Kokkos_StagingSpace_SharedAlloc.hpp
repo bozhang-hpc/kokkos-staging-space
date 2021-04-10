@@ -19,10 +19,6 @@ namespace Impl {
  *    Space m_space ;
  *  }
  */
-namespace Staging {
-  enum data_layout {LAYOUT_LEFT = 0,
-                    LAYOUT_RIGHT = 1 };
-}
 
 template <class DestroyFunctor>
 class StagingSharedAllocationRecord
@@ -30,15 +26,18 @@ class StagingSharedAllocationRecord
 
 private:
   StagingSharedAllocationRecord(const Kokkos::StagingSpace& arg_space,
-                         const std::string& arg_label, const size_t arg_alloc,
-                         const size_t rank, const size_t elem_size,
+                         const std::string& arg_label,
+                         const size_t arg_alloc,
+                         const size_t rank,
+                         const enum Kokkos::StagingSpace::data_layout layout,
+                         const size_t elem_size,
                          const size_t ub_N0, const size_t ub_N1,
                          const size_t ub_N2, const size_t ub_N3,
                          const size_t ub_N4, const size_t ub_N5,
                          const size_t ub_N6, const size_t ub_N7)
       //  Allocate user memory as [ SharedAllocationHeader , user_memory ] 
       : SharedAllocationRecord<Kokkos::StagingSpace, void>(
-            arg_space, arg_label, arg_alloc, rank, elem_size,
+            arg_space, arg_label, arg_alloc, rank, layout, elem_size,
             ub_N0, ub_N1, ub_N2, ub_N3, ub_N4, ub_N5, ub_N6, ub_N7,
             &Kokkos::Impl::deallocate<Kokkos::StagingSpace, DestroyFunctor>),
         m_destroy() {}
@@ -52,14 +51,14 @@ public:
   KOKKOS_INLINE_FUNCTION static StagingSharedAllocationRecord* allocate(
       const Kokkos::StagingSpace& arg_space, const std::string& arg_label,
       const size_t arg_alloc, const size_t rank,
-      const enum Kokkos::Impl::Staging::data_layout layout, const size_t elem_size,
+      const enum Kokkos::StagingSpace::data_layout layout, const size_t elem_size,
       const size_t ub_N0, const size_t ub_N1,
       const size_t ub_N2, const size_t ub_N3,
       const size_t ub_N4, const size_t ub_N5,
       const size_t ub_N6, const size_t ub_N7) {
 #if defined(KOKKOS_ACTIVE_EXECUTION_MEMORY_SPACE_HOST)
     return new StagingSharedAllocationRecord(arg_space, arg_label, 
-                                      arg_alloc, rank, elem_size,
+                                      arg_alloc, rank, layout, elem_size,
                                       ub_N0, ub_N1,
                                       ub_N2, ub_N3,
                                       ub_N4, ub_N5,

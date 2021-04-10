@@ -30,11 +30,13 @@ StagingSpace::StagingSpace(): rank(1),
                               mpi_size(1),
                               mpi_rank(0),
                               gcomm(MPI_COMM_WORLD),
-                              m_layout(StagingSpace::LAYOUT_DEFAULT),
+                              m_layout(data_layout::LAYOUT_RIGHT),
                               m_is_initialized(false) { }
 
 void* StagingSpace::allocate(const size_t arg_alloc_size, const std::string& path_,
-                              const size_t rank_, const size_t elem_size_,
+                              const size_t rank_, 
+                              const enum data_layout layout,
+                              const size_t elem_size_,
                               const size_t ub_N0, const size_t ub_N1,
                               const size_t ub_N2, const size_t ub_N3,
                               const size_t ub_N4, const size_t ub_N5,
@@ -42,9 +44,9 @@ void* StagingSpace::allocate(const size_t arg_alloc_size, const std::string& pat
     if(!m_is_initialized) {
       std::string path_prefix = get_timestep(path_, version);
       if (path_prefix.compare("") == 0) 
-        file_path = path_;
+        var_name = path_;
       else
-        file_path = path_prefix;
+        var_name = path_prefix;
 
       data_size = arg_alloc_size;
       rank = rank_;
@@ -78,9 +80,9 @@ void StagingSpace::deallocate(void * const arg_alloc_ptr
 
 size_t StagingSpace::write_data(const void* src, const size_t src_size){
   size_t m_written = 0;
-  dspaces_lock_on_write(file_path.c_str(), &gcomm);
-  int err = dspaces_put(file_path.c_str(), version, elem_size, rank, lb, ub, src);
-  dspaces_unlock_on_write(file_path.c_str(), &gcomm);
+  dspaces_lock_on_write(var_name.c_str(), &gcomm);
+  int err = dspaces_put(var_name.c_str(), version, elem_size, rank, lb, ub, src);
+  dspaces_unlock_on_write(var_name.c_str(), &gcomm);
   if(err == 0) {
     m_written = src_size;
   } else {
@@ -91,15 +93,49 @@ size_t StagingSpace::write_data(const void* src, const size_t src_size){
 
 size_t StagingSpace::read_data(void * dst, const size_t dst_size) {
   size_t dataRead = 0;
-  dspaces_lock_on_read(file_path.c_str(), &gcomm);
-  int err = dspaces_get(file_path.c_str(), version, elem_size, rank, lb, ub, dst);
-  dspaces_unlock_on_read(file_path.c_str(), &gcomm);
+  dspaces_lock_on_read(var_name.c_str(), &gcomm);
+  int err = dspaces_get(var_name.c_str(), version, elem_size, rank, lb, ub, dst);
+  dspaces_unlock_on_read(var_name.c_str(), &gcomm);
   if(err == 0) {
     dataRead = dst_size; 
   } else {
     printf("Error with read: %d \n", err);
   }
   return dataRead;
+}
+
+void StagingSpace::set_lb(const size_t lb_N0, const size_t lb_N1,
+                          const size_t lb_N2, const size_t lb_N3,
+                          const size_t lb_N4, const size_t lb_N5,
+                          const size_t lb_N6, const size_t lb_N7) {
+  lb[0] = lb_N0;
+  lb[1] = lb_N1;
+  lb[2] = lb_N2;
+  lb[3] = lb_N3;
+  lb[4] = lb_N4;
+  lb[5] = lb_N5;
+  lb[6] = lb_N6;
+  lb[7] = lb_N7;
+
+}
+
+void StagingSpace::set_ub(const size_t ub_N0, const size_t ub_N1,
+                          const size_t ub_N2, const size_t ub_N3,
+                          const size_t ub_N4, const size_t ub_N5,
+                          const size_t ub_N6, const size_t ub_N7) {
+  ub[0] = ub_N0;
+  ub[1] = ub_N1;
+  ub[2] = ub_N2;
+  ub[3] = ub_N3;
+  ub[4] = ub_N4;
+  ub[5] = ub_N5;
+  ub[6] = ub_N6;
+  ub[7] = ub_N7;
+  
+}
+
+void StagingSpace::set_version(const size_t ver) {
+  version = ver;
 }
 
 } // Kokkos
@@ -139,7 +175,9 @@ SharedAllocationRecord< Kokkos::StagingSpace , void >::
 SharedAllocationRecord( const Kokkos::StagingSpace & arg_space
                       , const std::string       & arg_label
                       , const size_t arg_alloc_size
-                      , const size_t rank, const size_t elem_size
+                      , const size_t rank
+                      , const enum Kokkos::StagingSpace::data_layout layout
+                      , const size_t elem_size
                       , const size_t ub_N0, const size_t ub_N1
                       , const size_t ub_N2, const size_t ub_N3
                       , const size_t ub_N4, const size_t ub_N5
@@ -155,7 +193,7 @@ SharedAllocationRecord( const Kokkos::StagingSpace & arg_space
 #endif
           reinterpret_cast<SharedAllocationHeader*>( const_cast<Kokkos::StagingSpace&> 
                                                       (arg_space).allocate(arg_alloc_size, arg_label,
-                                                                            rank, elem_size,
+                                                                            rank, layout, elem_size,
                                                                             ub_N0, ub_N1, ub_N2,
                                                                             ub_N3, ub_N4, ub_N5,
                                                                             ub_N6, ub_N7 ) )

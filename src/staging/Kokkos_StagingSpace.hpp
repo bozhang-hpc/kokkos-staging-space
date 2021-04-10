@@ -13,8 +13,9 @@
 
 
 
+
+
 #include <mpi.h>
-#include "dataspaces.h"
 
 
 
@@ -59,6 +60,9 @@ class StagingSpace {
 
   /*--------------------------------*/
 
+  enum data_layout {LAYOUT_LEFT = 0,
+                    LAYOUT_RIGHT = 1 };
+
   /**\brief  Default memory space instance */
   StagingSpace();
   StagingSpace(StagingSpace&& rhs) = default;
@@ -69,7 +73,9 @@ class StagingSpace {
 
   /**\brief  Allocate untracked memory in the space */
   void* allocate(const size_t arg_alloc_size, const std::string& path_,
-                  const size_t rank_, const size_t elem_size_,
+                  const size_t rank_,
+                  const enum data_layout layout,
+                  const size_t elem_size_,
                   const size_t ub_N0, const size_t ub_N1,
                   const size_t ub_N2, const size_t ub_N3,
                   const size_t ub_N4, const size_t ub_N5,
@@ -78,8 +84,7 @@ class StagingSpace {
   /**\brief  Deallocate untracked memory in the space */
   void deallocate(void * const arg_alloc_ptr, const size_t arg_alloc_size) const;
 
-  enum {LAYOUT_DEFAULT = 0,
-        LAYOUT_REGULAR = 1 };
+  
 
   size_t write_data(const void * src, const size_t src_size);
 
@@ -95,6 +100,19 @@ class StagingSpace {
   static void checkpoint_create_view_targets();
 
   static void set_default_path( const std::string path );
+
+  void set_lb(const size_t lb_N0, const size_t lb_N1,
+              const size_t lb_N2, const size_t lb_N3,
+              const size_t lb_N4, const size_t lb_N5,
+              const size_t lb_N6, const size_t lb_N7);
+
+  void set_ub(const size_t ub_N0, const size_t ub_N1,
+              const size_t ub_N2, const size_t ub_N3,
+              const size_t ub_N4, const size_t ub_N5,
+              const size_t ub_N6, const size_t ub_N7);
+
+  void set_version(const size_t ver);
+
   static std::string s_default_path;
 
   //static std::map<const std::string, KokkosDataspacesAccessor> m_accessor_map;
@@ -114,10 +132,10 @@ private:
   MPI_Comm gcomm;
 
   size_t data_size;
-  std::string file_path;
+  std::string var_name;
   bool is_contiguous;
 
-  int m_layout;
+  enum data_layout m_layout;
 
   static constexpr const char* m_name = "Staging";
   bool m_is_initialized;
@@ -161,7 +179,9 @@ protected:
   SharedAllocationRecord(const Kokkos::StagingSpace& arg_space,
                           const std::string& arg_label, 
                           const size_t arg_alloc_size, 
-                          const size_t rank, const size_t elem_size,
+                          const size_t rank,
+                          const enum Kokkos::StagingSpace::data_layout layout,
+                          const size_t elem_size,
                           const size_t ub_N0, const size_t ub_N1,
                           const size_t ub_N2, const size_t ub_N3,
                           const size_t ub_N4, const size_t ub_N5,
@@ -183,14 +203,16 @@ public:
   allocate(const Kokkos::StagingSpace& arg_space, 
           const std::string& arg_label, 
           const size_t arg_alloc_size,
-          const size_t rank, const size_t elem_size,
+          const size_t rank,
+          const enum Kokkos::StagingSpace::data_layout layout,
+          const size_t elem_size,
           const size_t ub_N0, const size_t ub_N1,
           const size_t ub_N2, const size_t ub_N3,
           const size_t ub_N4, const size_t ub_N5,
           const size_t ub_N6, const size_t ub_N7) {
 #if defined(KOKKOS_ACTIVE_EXECUTION_MEMORY_SPACE_HOST)
     return new SharedAllocationRecord(arg_space, arg_label, arg_alloc_size,
-                                      rank, elem_size,
+                                      rank, layout, elem_size,
                                       ub_N0, ub_N1, ub_N2, ub_N3,
                                       ub_N4, ub_N5, ub_N6, ub_N7);
 #else

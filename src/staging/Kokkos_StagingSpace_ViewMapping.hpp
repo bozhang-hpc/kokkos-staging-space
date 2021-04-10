@@ -14,7 +14,7 @@
 #include <impl/Kokkos_ViewTracker.hpp>
 #include <impl/Kokkos_ViewCtor.hpp>
 #include <impl/Kokkos_Tools.hpp>
-#include <Kokkos_StagingSpace_SharedAlloc.hpp>
+#include <Kokkos_StagingSpace.hpp>
 
 namespace Kokkos {
 
@@ -406,11 +406,11 @@ public:
             arg_prop)
             .value;
 
-    enum Kokkos::Impl::Staging::data_layout data_layout;
-    if(std::is_same<typename traits::array_layout, Kokkos::LayoutLeft>::value) {
-      data_layout = Kokkos::Impl::Staging::data_layout::LAYOUT_LEFT;
+    enum Kokkos::StagingSpace::data_layout data_layout;
+    if(std::is_same<typename Traits::array_layout, Kokkos::LayoutLeft>::value) {
+      data_layout = Kokkos::StagingSpace::data_layout::LAYOUT_LEFT;
     } else {
-      data_layout = Kokkos::Impl::Staging::data_layout::LAYOUT_RIGHT;
+      data_layout = Kokkos::StagingSpace::data_layout::LAYOUT_RIGHT;
     }
     // Create shared memory tracking record with allocate memory from the memory
     // space
