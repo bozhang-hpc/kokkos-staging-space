@@ -405,6 +405,13 @@ public:
         static_cast<Kokkos::Impl::ViewCtorProp<void, std::string> const&>(
             arg_prop)
             .value;
+
+    enum Kokkos::Impl::Staging::data_layout data_layout;
+    if(std::is_same<typename traits::array_layout, Kokkos::LayoutLeft>::value) {
+      data_layout = Kokkos::Impl::Staging::data_layout::LAYOUT_LEFT;
+    } else {
+      data_layout = Kokkos::Impl::Staging::data_layout::LAYOUT_RIGHT;
+    }
     // Create shared memory tracking record with allocate memory from the memory
     // space
     record_type* const record = record_type::allocate(
@@ -412,7 +419,7 @@ public:
             arg_prop)
             .value,
         alloc_name, alloc_size, 
-        Rank, sizeof(value_type),
+        Rank, data_layout, sizeof(value_type),
         dimension_0(), dimension_1(),
         dimension_2(), dimension_3(),
         dimension_4(), dimension_5(),

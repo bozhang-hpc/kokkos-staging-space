@@ -19,7 +19,10 @@ namespace Impl {
  *    Space m_space ;
  *  }
  */
-
+namespace Staging {
+  enum data_layout {LAYOUT_LEFT = 0,
+                    LAYOUT_RIGHT = 1 };
+}
 
 template <class DestroyFunctor>
 class StagingSharedAllocationRecord
@@ -48,7 +51,8 @@ public:
   // one to zero removes from the trakcing list and deallocates.
   KOKKOS_INLINE_FUNCTION static StagingSharedAllocationRecord* allocate(
       const Kokkos::StagingSpace& arg_space, const std::string& arg_label,
-      const size_t arg_alloc, const size_t rank, const size_t elem_size,
+      const size_t arg_alloc, const size_t rank,
+      const enum Kokkos::Impl::Staging::data_layout layout, const size_t elem_size,
       const size_t ub_N0, const size_t ub_N1,
       const size_t ub_N2, const size_t ub_N3,
       const size_t ub_N4, const size_t ub_N5,
