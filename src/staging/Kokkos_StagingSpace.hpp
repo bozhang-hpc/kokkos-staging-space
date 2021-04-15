@@ -83,9 +83,6 @@ class StagingSpace {
 
   size_t read_data(void * dst, const size_t dst_size);
 
-  static void initialize();
-  static void finalize();
-
   /**\brief Return Name of the MemorySpace */
   static constexpr const char* name() { return m_name; }
 
