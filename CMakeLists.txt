@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.14)
 project(KokkosStaging 
         LANGUAGES CXX 
-        VERSION 0.1.0)
+        VERSION 0.2.0)
 
 message(STATUS "${CMAKE_CURRENT_SOURCE_DIR}")
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules")
@@ -30,7 +30,7 @@ target_include_directories(staging PUBLIC $<INSTALL_INTERFACE:include>)
 
 target_link_libraries(staging PUBLIC Kokkos::kokkos)
 target_link_libraries(staging PUBLIC MPI::MPI_CXX)
-target_link_libraries(staging PRIVATE DataSpaces::DataSpaces)
+target_link_libraries(staging PUBLIC DataSpaces::DataSpaces)
 
 include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)

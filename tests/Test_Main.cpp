@@ -8,9 +8,13 @@ int main(int argc, char** argv) {
 
     Kokkos::initialize(argc, argv);
 
+    Kokkos::StagingSpace::initialize();
+
     ::testing::InitGoogleTest(&argc, argv);
 
     int ret = RUN_ALL_TESTS();
+
+    Kokkos::StagingSpace::finalize();
 
     Kokkos::finalize();
 

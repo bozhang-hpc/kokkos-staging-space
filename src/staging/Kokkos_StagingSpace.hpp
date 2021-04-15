@@ -10,6 +10,7 @@
 #include <Kokkos_Core.hpp>
 #include <impl/Kokkos_SharedAlloc.hpp>
 
+#include <dspaces.h>
 #include <mpi.h>
 
 
@@ -54,21 +55,23 @@ class StagingSpace {
 
   /*--------------------------------*/
 
+  enum data_layout {LAYOUT_LEFT = 0,
+                    LAYOUT_RIGHT = 1 };
+
   /**\brief  Default memory space instance */
   StagingSpace();
-  StagingSpace(StagingSpace&& rhs) = default;
-  StagingSpace(const StagingSpace& rhs) = default;
-  StagingSpace& operator=(StagingSpace&& rhs) = default;
-  StagingSpace& operator=(const StagingSpace &rhs) = default;
+  StagingSpace(StagingSpace&& rhs);
+  StagingSpace(const StagingSpace& rhs);
+  StagingSpace& operator=(StagingSpace&& rhs);
+  StagingSpace& operator=(const StagingSpace &rhs);
   ~StagingSpace() = default;
 
   /**\brief  Allocate untracked memory in the space */
   void* allocate(const size_t arg_alloc_size, const std::string& path_,
-                  const size_t rank_, const size_t elem_size_,
-                  const size_t ub_N0, const size_t ub_N1,
-                  const size_t ub_N2, const size_t ub_N3,
-                  const size_t ub_N4, const size_t ub_N5,
-                  const size_t ub_N6, const size_t ub_N7);
+                  const size_t rank_,
+                  const enum data_layout layout,
+                  const size_t elem_size_,
+                  const size_t* ub);
 
   /**\brief  Deallocate untracked memory in the space */
   void deallocate(void * const arg_alloc_ptr, const size_t arg_alloc_size) const;
@@ -97,23 +100,24 @@ class StagingSpace {
 private:
   
   std::string get_timestep(std::string path, size_t &ts);
+  void index_reverse();
 
   size_t rank; // rank of the dataset (number of dimensions)
   size_t version;         // version of the dataset
-  int appid;              // dataspaces client handle
   size_t elem_size;          // size of single element size, e.g. sizeof(double)
-  uint64_t lb[8];         // coordinates for the lower corner of the local bounding box.
-  uint64_t ub[8];         // coordinates for the upper corner of the local bounding box.
-  int mpi_size;
-  int mpi_rank;
+  uint64_t* lb;         // coordinates for the lower corner of the local bounding box.
+  uint64_t* ub;         // coordinates for the upper corner of the local bounding box.
+
   MPI_Comm gcomm;
 
   size_t data_size;
-  std::string file_path;
+  std::string var_name;
   bool is_contiguous;
 
-  int m_layout;
+  enum ds_layout_type m_layout;
+  int m_timeout;
 
+  static dspaces_client_t ndcl;
   static constexpr const char* m_name = "Staging";
   bool m_is_initialized;
   friend class Kokkos::Impl::SharedAllocationRecord< Kokkos::StagingSpace, void>;
@@ -156,11 +160,9 @@ protected:
   SharedAllocationRecord(const Kokkos::StagingSpace& arg_space,
                           const std::string& arg_label, 
                           const size_t arg_alloc_size, 
-                          const size_t rank, const size_t elem_size,
-                          const size_t ub_N0, const size_t ub_N1,
-                          const size_t ub_N2, const size_t ub_N3,
-                          const size_t ub_N4, const size_t ub_N5,
-                          const size_t ub_N6, const size_t ub_N7,
+                          const size_t rank,
+                          const enum Kokkos::StagingSpace::data_layout layout,
+                          const size_t elem_size, const size_t* ub,
                           const RecordBase::function_type arg_dealloc = &deallocate
                           );
 
@@ -178,16 +180,12 @@ public:
   allocate(const Kokkos::StagingSpace& arg_space, 
           const std::string& arg_label, 
           const size_t arg_alloc_size,
-          const size_t rank, const size_t elem_size,
-          const size_t ub_N0, const size_t ub_N1,
-          const size_t ub_N2, const size_t ub_N3,
-          const size_t ub_N4, const size_t ub_N5,
-          const size_t ub_N6, const size_t ub_N7) {
+          const size_t rank,
+          const enum Kokkos::StagingSpace::data_layout layout,
+          const size_t elem_size, const size_t* ub) {
 #if defined(KOKKOS_ACTIVE_EXECUTION_MEMORY_SPACE_HOST)
     return new SharedAllocationRecord(arg_space, arg_label, arg_alloc_size,
-                                      rank, elem_size,
-                                      ub_N0, ub_N1, ub_N2, ub_N3,
-                                      ub_N4, ub_N5, ub_N6, ub_N7);
+                                      rank, layout, elem_size, ub);
 #else
     return (SharedAllocationRecord *)0;
 #endif
