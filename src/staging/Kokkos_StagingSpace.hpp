@@ -11,9 +11,7 @@
 #include <impl/Kokkos_SharedAlloc.hpp>
 
 #include <dspaces.h>
-
 #include <mpi.h>
-
 
 
 /*--------------------------------------------------------------------------*/
@@ -78,7 +76,8 @@ class StagingSpace {
   /**\brief  Deallocate untracked memory in the space */
   void deallocate(void * const arg_alloc_ptr, const size_t arg_alloc_size) const;
 
-  
+  static void initialize();
+  static void finalize();
 
   size_t write_data(const void * src, const size_t src_size);
 
@@ -135,11 +134,9 @@ private:
   bool is_contiguous;
 
   enum ds_layout_type m_layout;
-
   int m_timeout;
 
   static dspaces_client_t ndcl;
-
   static constexpr const char* m_name = "Staging";
   bool m_is_initialized;
   friend class Kokkos::Impl::SharedAllocationRecord< Kokkos::StagingSpace, void>;

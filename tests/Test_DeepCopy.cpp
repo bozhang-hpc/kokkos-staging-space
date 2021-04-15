@@ -160,7 +160,11 @@ void test_deepcopy(int i1, int i2, int i3)
     std::string v_s_label ="StagingView_3D_";
     std::string type_name (typeid(Data_t).name());
     v_s_label += type_name+"_"+std::to_string(i1)+"_"+std::to_string(i2)+"_"+
+<<<<<<< HEAD
                 std::to_string(i3);
+=======
+                    std::to_string(i3);
+>>>>>>> master
 
     ViewHost_t v_P("PutView", i1, i2, i3);
     ViewStaging_t v_S(v_s_label, i1, i2, i3);
@@ -197,7 +201,11 @@ void test_deepcopy(int i1, int i2, int i3, int i4)
     std::string v_s_label ="StagingView_4D_";
     std::string type_name (typeid(Data_t).name());
     v_s_label += type_name+"_"+std::to_string(i1)+"_"+std::to_string(i2)+"_"+
+<<<<<<< HEAD
                 std::to_string(i3)+"_"+std::to_string(i4);
+=======
+                    std::to_string(i3)+"_"+std::to_string(i4);
+>>>>>>> master
 
     ViewHost_t v_P("PutView", i1, i2, i3, i4);
     ViewStaging_t v_S(v_s_label, i1, i2, i3, i4);
@@ -236,8 +244,13 @@ void test_deepcopy(int i1, int i2, int i3, int i4, int i5)
     std::string v_s_label ="StagingView_5D_";
     std::string type_name (typeid(Data_t).name());
     v_s_label += type_name+"_"+std::to_string(i1)+"_"+std::to_string(i2)+"_"+
+<<<<<<< HEAD
                 std::to_string(i3)+"_"+std::to_string(i4)+"_"+
                 std::to_string(i5);
+=======
+                    std::to_string(i3)+"_"+std::to_string(i4)+"_"+
+                    std::to_string(i5);
+>>>>>>> master
 
     ViewHost_t v_P("PutView", i1, i2, i3, i4, i5);
     ViewStaging_t v_S(v_s_label, i1, i2, i3, i4, i5);
@@ -280,8 +293,13 @@ void test_deepcopy(int i1, int i2, int i3, int i4, int i5, int i6)
     std::string v_s_label ="StagingView_6D_";
     std::string type_name (typeid(Data_t).name());
     v_s_label += type_name+"_"+std::to_string(i1)+"_"+std::to_string(i2)+"_"+
+<<<<<<< HEAD
                 std::to_string(i3)+"_"+std::to_string(i4)+"_"+
                 std::to_string(i5)+"_"+std::to_string(i6);
+=======
+                    std::to_string(i3)+"_"+std::to_string(i4)+"_"+
+                    std::to_string(i5)+"_"+std::to_string(i6);
+>>>>>>> master
 
     ViewHost_t v_P("PutView", i1, i2, i3, i4, i5, i6);
     ViewStaging_t v_S(v_s_label, i1, i2, i3, i4, i5, i6);
@@ -326,9 +344,15 @@ void test_deepcopy(int i1, int i2, int i3, int i4, int i5, int i6, int i7)
     std::string v_s_label ="StagingView_7D_";
     std::string type_name (typeid(Data_t).name());
     v_s_label += type_name+"_"+std::to_string(i1)+"_"+std::to_string(i2)+"_"+
+<<<<<<< HEAD
                 std::to_string(i3)+"_"+std::to_string(i4)+"_"+
                 std::to_string(i5)+"_"+std::to_string(i6)+"_"+
                 std::to_string(i7);
+=======
+                    std::to_string(i3)+"_"+std::to_string(i4)+"_"+
+                    std::to_string(i5)+"_"+std::to_string(i6)+"_"+
+                    std::to_string(i7);
+>>>>>>> master
 
     ViewHost_t v_P("PutView", i1, i2, i3, i4, i5, i6, i7);
     ViewStaging_t v_S(v_s_label, i1, i2, i3, i4, i5, i6, i7);
@@ -375,9 +399,15 @@ void test_deepcopy(int i1, int i2, int i3, int i4, int i5, int i6, int i7, int i
     std::string v_s_label ="StagingView_8D_";
     std::string type_name (typeid(Data_t).name());
     v_s_label += type_name+"_"+std::to_string(i1)+"_"+std::to_string(i2)+"_"+
+<<<<<<< HEAD
                 std::to_string(i3)+"_"+std::to_string(i4)+"_"+
                 std::to_string(i5)+"_"+std::to_string(i6)+"_"+
                 std::to_string(i7)+"_"+std::to_string(i8);
+=======
+                    std::to_string(i3)+"_"+std::to_string(i4)+"_"+
+                    std::to_string(i5)+"_"+std::to_string(i6)+"_"+
+                    std::to_string(i7)+"_"+std::to_string(i8);
+>>>>>>> master
 
     ViewHost_t v_P("PutView", i1, i2, i3, i4, i5, i6, i7, i8);
     ViewStaging_t v_S(v_s_label, i1, i2, i3, i4, i5, i6, i7, i8);
@@ -450,9 +480,12 @@ TEST(TEST_CATEGORY, test_deepcopy) {
     test_deepcopy<int64_t>(10,10,10,10,10,10,10);
     test_deepcopy<double>(10,10,10,10,10,10,10);
 
+<<<<<<< HEAD
     //8D
     //test_deepcopy<int>(10,10,10,10,10,10,10,10);
     //test_deepcopy<int64_t>(10,10,10,10,10,10,10,10);
     //test_deepcopy<double>(10,10,10,10,10,10,10,10);
 
+=======
+>>>>>>> master
 }

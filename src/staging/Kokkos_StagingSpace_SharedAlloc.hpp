@@ -7,18 +7,6 @@
 
 namespace Kokkos {
 namespace Impl {
-/*
- *  Memory space specialization of SharedAllocationRecord< Kokkos::StagingSpace , void >
- * requires :
- *
- *  SharedAllocationRecord< Kokkos::StagingSpace , void > : public SharedAllocationRecord< void
- * , void >
- *  {
- *    // delete allocated user memory via static_cast to this type.
- *    static void deallocate( const SharedAllocationRecord<void,void> * );
- *    Space m_space ;
- *  }
- */
 
 template <class DestroyFunctor>
 class StagingSharedAllocationRecord

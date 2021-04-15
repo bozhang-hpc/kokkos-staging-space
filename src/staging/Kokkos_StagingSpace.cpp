@@ -9,9 +9,10 @@
 #include <limits>
 #include <unistd.h>
 
+
 namespace Kokkos {
 
-dspaces_client_t StagingSpace::ndcl= dspaces_CLIENT_NULL;
+dspaces_client_t StagingSpace::ndcl = dspaces_CLIENT_NULL;
 
 std::string StagingSpace::get_timestep(std::string path, size_t& ts) {
   std::smatch result;
@@ -36,7 +37,6 @@ void StagingSpace::index_reverse() {
 
 StagingSpace::StagingSpace(): rank(1),
                               version(0),
-                              appid(0),
                               elem_size(1),
                               //lb{0,0,0,0,0,0,0,0},
                               //ub{0,0,0,0,0,0,0,0},
@@ -49,7 +49,7 @@ StagingSpace::StagingSpace(): rank(1),
 StagingSpace::StagingSpace(StagingSpace&& rhs) {
   rank = rhs.rank;
   version = rhs.version;
-  appid = rhs.appid;
+  //appid = rhs.appid;
   elem_size = rhs.elem_size;
   // DeepCopy
   lb = (uint64_t*) malloc(rank*sizeof(uint64_t));
@@ -68,7 +68,7 @@ StagingSpace::StagingSpace(StagingSpace&& rhs) {
 StagingSpace::StagingSpace(const StagingSpace& rhs) {
   rank = rhs.rank;
   version = rhs.version;
-  appid = rhs.appid;
+  //appid = rhs.appid;
   elem_size = rhs.elem_size;
   // DeepCopy
   lb = (uint64_t*) malloc(rank*sizeof(uint64_t));
@@ -87,7 +87,7 @@ StagingSpace::StagingSpace(const StagingSpace& rhs) {
 StagingSpace& StagingSpace::operator=(StagingSpace&& rhs) {
   rank = rhs.rank;
   version = rhs.version;
-  appid = rhs.appid;
+  //appid = rhs.appid;
   elem_size = rhs.elem_size;
   // DeepCopy
   lb = (uint64_t*) malloc(rank*sizeof(uint64_t));
@@ -107,7 +107,7 @@ StagingSpace& StagingSpace::operator=(StagingSpace&& rhs) {
 StagingSpace& StagingSpace::operator=(const StagingSpace &rhs) {
   rank = rhs.rank;
   version = rhs.version;
-  appid = rhs.appid;
+  //appid = rhs.appid;
   elem_size = rhs.elem_size;
   // DeepCopy
   lb = (uint64_t*) malloc(rank*sizeof(uint64_t));
@@ -123,11 +123,6 @@ StagingSpace& StagingSpace::operator=(const StagingSpace &rhs) {
   m_is_initialized = rhs.m_is_initialized;
   return *this;
 }
-/*
-StagingSpace::~StagingSpace() { 
-  std::cout<<"Destruction Func"<<std::endl;
-}
-*/
 
 void StagingSpace::initialize() {
   int mpi_rank, mpi_size;
@@ -347,55 +342,6 @@ SharedAllocationRecord( const Kokkos::StagingSpace & arg_space
 }
 
 //----------------------------------------------------------------------------
-
-/* StagingSpace is not a memory space affliated to ExecutionSpace, do not need
-    below functions */
-
-/*
-void * SharedAllocationRecord< Kokkos::StagingSpace , void >::
-allocate_tracked( const Kokkos::StagingSpace & arg_space
-                , const std::string & arg_alloc_label
-                , const size_t arg_alloc_size
-                , const size_t rank, const size_t ub_N0,
-                , const size_t ub_N1, const size_t ub_N2,
-                , const size_t ub_N3, const size_t ub_N4,
-                , const size_t ub_N5, const size_t ub_N6,
-                , const size_t ub_N7 )
-{
-    if ( ! arg_alloc_size ) return (void *) 0 ;
-
-    SharedAllocationRecord * const r =
-        allocate( arg_space , arg_alloc_label , arg_alloc_size );
-
-    RecordBase::increment( r );
-
-    return r->data();
-}
-
-void SharedAllocationRecord< Kokkos::StagingSpace , void >::
-deallocate_tracked( void * const arg_alloc_ptr )
-{
-    if ( arg_alloc_ptr != 0 ) {
-        SharedAllocationRecord * const r = get_record( arg_alloc_ptr );
-
-        RecordBase::decrement( r );
-    }
-}
-
-void * SharedAllocationRecord< Kokkos::StagingSpace , void >::
-reallocate_tracked( void * const arg_alloc_ptr
-                  , const size_t arg_alloc_size )
-{
-  SharedAllocationRecord * const r_old = get_record( arg_alloc_ptr );
-  SharedAllocationRecord * const r_new = allocate( r_old->m_space , r_old->get_label() , arg_alloc_size );
-
-  RecordBase::increment( r_new );
-  RecordBase::decrement( r_old );
-
-  return r_new->data();
-}
-
-*/
 
 SharedAllocationRecord< Kokkos::StagingSpace , void > *
 SharedAllocationRecord< Kokkos::StagingSpace , void >::get_record( void * alloc_ptr )
