@@ -76,8 +76,8 @@ class StagingSpace {
   /**\brief  Deallocate untracked memory in the space */
   void deallocate(void * const arg_alloc_ptr, const size_t arg_alloc_size) const;
 
-  enum {LAYOUT_DEFAULT = 0,
-        LAYOUT_REGULAR = 1 };
+  static void initialize();
+  static void finalize();
 
   size_t write_data(const void * src, const size_t src_size);
 

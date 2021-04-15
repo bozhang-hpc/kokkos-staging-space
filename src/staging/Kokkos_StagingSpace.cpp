@@ -36,7 +36,6 @@ void StagingSpace::index_reverse() {
 
 StagingSpace::StagingSpace(): rank(1),
                               version(0),
-                              appid(0),
                               elem_size(1),
                               gcomm(MPI_COMM_WORLD),
                               m_timeout(-1),
@@ -45,7 +44,6 @@ StagingSpace::StagingSpace(): rank(1),
 StagingSpace::StagingSpace(StagingSpace&& rhs) {
   rank = rhs.rank;
   version = rhs.version;
-  appid = rhs.appid;
   elem_size = rhs.elem_size;
   // DeepCopy
   lb = (uint64_t*) malloc(rank*sizeof(uint64_t));
@@ -64,7 +62,6 @@ StagingSpace::StagingSpace(StagingSpace&& rhs) {
 StagingSpace::StagingSpace(const StagingSpace& rhs) {
   rank = rhs.rank;
   version = rhs.version;
-  appid = rhs.appid;
   elem_size = rhs.elem_size;
   // DeepCopy
   lb = (uint64_t*) malloc(rank*sizeof(uint64_t));
@@ -83,7 +80,6 @@ StagingSpace::StagingSpace(const StagingSpace& rhs) {
 StagingSpace& StagingSpace::operator=(StagingSpace&& rhs) {
   rank = rhs.rank;
   version = rhs.version;
-  appid = rhs.appid;
   elem_size = rhs.elem_size;
   // DeepCopy
   lb = (uint64_t*) malloc(rank*sizeof(uint64_t));
@@ -103,7 +99,6 @@ StagingSpace& StagingSpace::operator=(StagingSpace&& rhs) {
 StagingSpace& StagingSpace::operator=(const StagingSpace &rhs) {
   rank = rhs.rank;
   version = rhs.version;
-  appid = rhs.appid;
   elem_size = rhs.elem_size;
   // DeepCopy
   lb = (uint64_t*) malloc(rank*sizeof(uint64_t));
