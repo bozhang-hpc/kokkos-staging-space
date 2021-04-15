@@ -109,7 +109,7 @@ class StagingSpace {
 
   //static dspaces_client_t ndcl;
 
-  //static std::map<const std::string, KokkosDataspacesAccessor> m_accessor_map;
+  std::map<const enum ds_layout_type, StagingSpace> m_layout_space_map;
 
 private:
   

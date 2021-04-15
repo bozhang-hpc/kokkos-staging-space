@@ -63,6 +63,7 @@ StagingSpace::StagingSpace(StagingSpace&& rhs) {
   m_layout = rhs.m_layout;
   m_timeout = rhs.m_timeout;
   m_is_initialized = rhs.m_is_initialized;
+  m_layout_space_map(rhs.m_layout_space_map);
 }
 
 StagingSpace::StagingSpace(const StagingSpace& rhs) {
@@ -82,6 +83,7 @@ StagingSpace::StagingSpace(const StagingSpace& rhs) {
   m_layout = rhs.m_layout;
   m_timeout = rhs.m_timeout;
   m_is_initialized = rhs.m_is_initialized;
+  m_layout_space_map(rhs.m_layout_space_map);
 }
 
 StagingSpace& StagingSpace::operator=(StagingSpace&& rhs) {
@@ -101,6 +103,7 @@ StagingSpace& StagingSpace::operator=(StagingSpace&& rhs) {
   m_layout = rhs.m_layout;
   m_timeout = rhs.m_timeout;
   m_is_initialized = rhs.m_is_initialized;
+  m_layout_space_map(rhs.m_layout_space_map);
   return *this;
 }
 
@@ -121,6 +124,7 @@ StagingSpace& StagingSpace::operator=(const StagingSpace &rhs) {
   m_layout = rhs.m_layout;
   m_timeout = rhs.m_timeout;
   m_is_initialized = rhs.m_is_initialized;
+  m_layout_space_map(rhs.m_layout_space_map);
   return *this;
 }
 
