@@ -10,7 +10,11 @@ int main(int argc, char** argv) {
 
     ::testing::InitGoogleTest(&argc, argv);
 
+    Kokkos::StagingSpace::initialize();
+
     int ret = RUN_ALL_TESTS();
+
+    Kokkos::StagingSpace::finalize();
 
     Kokkos::finalize();
 

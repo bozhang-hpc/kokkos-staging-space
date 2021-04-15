@@ -2,8 +2,10 @@
 #include <Kokkos_Core.hpp>
 #include <Kokkos_StagingSpace.hpp>
 #include <mpi.h>
+#include <unistd.h>
 #include <string.h>
 #include <iostream>
+#include <typeinfo>
 
 /*
 using StagingSpace = Kokkos::StagingSpace;
@@ -88,7 +90,8 @@ void test_deepcopy(int i1)
     using ViewStaging_t = Kokkos::View<Data_t*, Kokkos::StagingSpace>;
 
     std::string v_s_label ="StagingView_1D_";
-    v_s_label += std::to_string(i1);
+    std::string type_name (typeid(Data_t).name());
+    v_s_label += type_name+"_"+std::to_string(i1);
 
     ViewHost_t v_P("PutView", i1);
     ViewStaging_t v_S(v_s_label, i1);
@@ -119,7 +122,8 @@ void test_deepcopy(int i1, int i2)
     using ViewStaging_t = Kokkos::View<Data_t**, Kokkos::StagingSpace>;
 
     std::string v_s_label ="StagingView_2D_";
-    v_s_label += std::to_string(i1)+"_"+std::to_string(i2);
+    std::string type_name (typeid(Data_t).name());
+    v_s_label += type_name+"_"+std::to_string(i1)+"_"+std::to_string(i2);
 
     ViewHost_t v_P("PutView", i1, i2);
     ViewStaging_t v_S(v_s_label, i1, i2);
@@ -133,10 +137,12 @@ void test_deepcopy(int i1, int i2)
     Kokkos::deep_copy(v_S, v_P);
     
     Kokkos::deep_copy(v_G, v_S);
-
+    
     for(int i1_=0; i1_<i1; i1_++) {
-        for(int i2_=0; i2_<i2; i2_++)
+        for(int i2_=0; i2_<i2; i2_++){
+            //std::cout<<"VP="<<v_P(i1_, i2_)<<"\tVG="<<v_G(i1_, i2_)<<std::endl;
             ASSERT_EQ(v_G(i1_, i2_), v_P(i1_, i2_));
+        }
     }
 
 }
@@ -152,7 +158,8 @@ void test_deepcopy(int i1, int i2, int i3)
     using ViewStaging_t = Kokkos::View<Data_t***, Kokkos::StagingSpace>;
 
     std::string v_s_label ="StagingView_3D_";
-    v_s_label += std::to_string(i1)+"_"+std::to_string(i2)+"_"+
+    std::string type_name (typeid(Data_t).name());
+    v_s_label += type_name+"_"+std::to_string(i1)+"_"+std::to_string(i2)+"_"+
                 std::to_string(i3);
 
     ViewHost_t v_P("PutView", i1, i2, i3);
@@ -188,7 +195,8 @@ void test_deepcopy(int i1, int i2, int i3, int i4)
     using ViewStaging_t = Kokkos::View<Data_t****, Kokkos::StagingSpace>;
 
     std::string v_s_label ="StagingView_4D_";
-    v_s_label += std::to_string(i1)+"_"+std::to_string(i2)+"_"+
+    std::string type_name (typeid(Data_t).name());
+    v_s_label += type_name+"_"+std::to_string(i1)+"_"+std::to_string(i2)+"_"+
                 std::to_string(i3)+"_"+std::to_string(i4);
 
     ViewHost_t v_P("PutView", i1, i2, i3, i4);
@@ -226,7 +234,8 @@ void test_deepcopy(int i1, int i2, int i3, int i4, int i5)
     using ViewStaging_t = Kokkos::View<Data_t*****, Kokkos::StagingSpace>;
 
     std::string v_s_label ="StagingView_5D_";
-    v_s_label += std::to_string(i1)+"_"+std::to_string(i2)+"_"+
+    std::string type_name (typeid(Data_t).name());
+    v_s_label += type_name+"_"+std::to_string(i1)+"_"+std::to_string(i2)+"_"+
                 std::to_string(i3)+"_"+std::to_string(i4)+"_"+
                 std::to_string(i5);
 
@@ -269,7 +278,8 @@ void test_deepcopy(int i1, int i2, int i3, int i4, int i5, int i6)
     using ViewStaging_t = Kokkos::View<Data_t******, Kokkos::StagingSpace>;
 
     std::string v_s_label ="StagingView_6D_";
-    v_s_label += std::to_string(i1)+"_"+std::to_string(i2)+"_"+
+    std::string type_name (typeid(Data_t).name());
+    v_s_label += type_name+"_"+std::to_string(i1)+"_"+std::to_string(i2)+"_"+
                 std::to_string(i3)+"_"+std::to_string(i4)+"_"+
                 std::to_string(i5)+"_"+std::to_string(i6);
 
@@ -314,7 +324,8 @@ void test_deepcopy(int i1, int i2, int i3, int i4, int i5, int i6, int i7)
     using ViewStaging_t = Kokkos::View<Data_t*******, Kokkos::StagingSpace>;
 
     std::string v_s_label ="StagingView_7D_";
-    v_s_label += std::to_string(i1)+"_"+std::to_string(i2)+"_"+
+    std::string type_name (typeid(Data_t).name());
+    v_s_label += type_name+"_"+std::to_string(i1)+"_"+std::to_string(i2)+"_"+
                 std::to_string(i3)+"_"+std::to_string(i4)+"_"+
                 std::to_string(i5)+"_"+std::to_string(i6)+"_"+
                 std::to_string(i7);
@@ -362,7 +373,8 @@ void test_deepcopy(int i1, int i2, int i3, int i4, int i5, int i6, int i7, int i
     using ViewStaging_t = Kokkos::View<Data_t********, Kokkos::StagingSpace>;
 
     std::string v_s_label ="StagingView_8D_";
-    v_s_label += std::to_string(i1)+"_"+std::to_string(i2)+"_"+
+    std::string type_name (typeid(Data_t).name());
+    v_s_label += type_name+"_"+std::to_string(i1)+"_"+std::to_string(i2)+"_"+
                 std::to_string(i3)+"_"+std::to_string(i4)+"_"+
                 std::to_string(i5)+"_"+std::to_string(i6)+"_"+
                 std::to_string(i7)+"_"+std::to_string(i8);
@@ -439,8 +451,8 @@ TEST(TEST_CATEGORY, test_deepcopy) {
     test_deepcopy<double>(10,10,10,10,10,10,10);
 
     //8D
-    test_deepcopy<int>(10,10,10,10,10,10,10,10);
-    test_deepcopy<int64_t>(10,10,10,10,10,10,10,10);
-    test_deepcopy<double>(10,10,10,10,10,10,10,10);
+    //test_deepcopy<int>(10,10,10,10,10,10,10,10);
+    //test_deepcopy<int64_t>(10,10,10,10,10,10,10,10);
+    //test_deepcopy<double>(10,10,10,10,10,10,10,10);
 
 }

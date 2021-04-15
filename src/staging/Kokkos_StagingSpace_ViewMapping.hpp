@@ -412,6 +412,15 @@ public:
     } else {
       data_layout = Kokkos::StagingSpace::data_layout::LAYOUT_RIGHT;
     }
+    size_t ub[8];
+    ub[0] = dimension_0();
+    ub[1] = dimension_1();
+    ub[2] = dimension_2();
+    ub[3] = dimension_3();
+    ub[4] = dimension_4();
+    ub[5] = dimension_5();
+    ub[6] = dimension_6();
+    ub[7] = dimension_7();
     // Create shared memory tracking record with allocate memory from the memory
     // space
     record_type* const record = record_type::allocate(
@@ -419,11 +428,7 @@ public:
             arg_prop)
             .value,
         alloc_name, alloc_size, 
-        Rank, data_layout, sizeof(value_type),
-        dimension_0(), dimension_1(),
-        dimension_2(), dimension_3(),
-        dimension_4(), dimension_5(),
-        dimension_6(), dimension_7());
+        Rank, data_layout, sizeof(value_type), ub);
 
     m_impl_handle = handle_type(reinterpret_cast<pointer_type>(record->data()));
 

@@ -163,7 +163,7 @@ inline void deep_copy(
       (src.extent(4) != dst.extent(4)) || (src.extent(5) != dst.extent(5)) ||
       (src.extent(6) != dst.extent(6)) || (src.extent(7) != dst.extent(7)));
 
-  std::cout<<"KSS_CopyViews.hpp:166 Flag:"<<std::boolalpha<<flag0<<std::endl;
+  //std::cout<<"KSS_CopyViews.hpp:166 Flag:"<<std::boolalpha<<flag0<<std::endl;
 
   // If same type, equal layout, equal dimensions, equal span, and contiguous
   // memory then can byte-wise copy
@@ -171,12 +171,12 @@ inline void deep_copy(
   bool flag1 = std::is_same<typename dst_type::value_type,
                    typename src_type::non_const_value_type>::value;
   
-  std::cout<<"value_t non_const_value_t Flag:"<<std::boolalpha<<flag1<<std::endl;
+  //std::cout<<"value_t non_const_value_t Flag:"<<std::boolalpha<<flag1<<std::endl;
 
   bool flag2 = std::is_same<typename dst_type::array_layout,
                     typename src_type::array_layout>::value;
   
-  std::cout<<"array_layout Flag:"<<std::boolalpha<<flag2<<std::endl;
+  //std::cout<<"array_layout Flag:"<<std::boolalpha<<flag2<<std::endl;
 
 
   if (std::is_same<typename dst_type::value_type,
