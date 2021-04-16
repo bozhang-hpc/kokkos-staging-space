@@ -63,7 +63,7 @@ StagingSpace::StagingSpace(StagingSpace&& rhs) {
   m_layout = rhs.m_layout;
   m_timeout = rhs.m_timeout;
   m_is_initialized = rhs.m_is_initialized;
-  m_layout_space_map(rhs.m_layout_space_map);
+  //m_layout_space_map = rhs.m_layout_space_map;
 }
 
 StagingSpace::StagingSpace(const StagingSpace& rhs) {
@@ -83,7 +83,7 @@ StagingSpace::StagingSpace(const StagingSpace& rhs) {
   m_layout = rhs.m_layout;
   m_timeout = rhs.m_timeout;
   m_is_initialized = rhs.m_is_initialized;
-  m_layout_space_map(rhs.m_layout_space_map);
+  //m_layout_space_map = rhs.m_layout_space_map;
 }
 
 StagingSpace& StagingSpace::operator=(StagingSpace&& rhs) {
@@ -103,7 +103,7 @@ StagingSpace& StagingSpace::operator=(StagingSpace&& rhs) {
   m_layout = rhs.m_layout;
   m_timeout = rhs.m_timeout;
   m_is_initialized = rhs.m_is_initialized;
-  m_layout_space_map(rhs.m_layout_space_map);
+  //m_layout_space_map = rhs.m_layout_space_map;
   return *this;
 }
 
@@ -124,7 +124,7 @@ StagingSpace& StagingSpace::operator=(const StagingSpace &rhs) {
   m_layout = rhs.m_layout;
   m_timeout = rhs.m_timeout;
   m_is_initialized = rhs.m_is_initialized;
-  m_layout_space_map(rhs.m_layout_space_map);
+  //m_layout_space_map = rhs.m_layout_space_map;
   return *this;
 }
 
@@ -184,6 +184,8 @@ void* StagingSpace::allocate(const size_t arg_alloc_size, const std::string& pat
         index_reverse();
         break;
       }
+
+      //m_layout_space_map[m_layout] = *this;
 
       /*
       std::string pid_str = std::to_string((int)getpid());
@@ -267,6 +269,10 @@ void StagingSpace::set_ub(const size_t ub_N0, const size_t ub_N1,
 
 void StagingSpace::set_version(const size_t ver) {
   version = ver;
+}
+
+void StagingSpace::set_var_name(const std::string var_name_) {
+  var_name = var_name_;
 }
 
 } // Kokkos

@@ -105,11 +105,17 @@ class StagingSpace {
 
   void set_version(const size_t ver);
 
+  const std::string get_var_name() { return var_name; }
+
+  void set_var_name(const std::string path);
+
+  //const enum ds_layout_type get_layout() { return m_layout; }
+
   static std::string s_default_path;
 
   //static dspaces_client_t ndcl;
 
-  std::map<const enum ds_layout_type, StagingSpace> m_layout_space_map;
+  //std::map<const enum ds_layout_type, const StagingSpace&> m_layout_space_map;
 
 private:
   
@@ -277,5 +283,6 @@ struct DeepCopy<Kokkos::HostSpace, Kokkos::StagingSpace, ExecutionSpace> {
 #include <Kokkos_StagingSpace_SharedAlloc.hpp>
 #include <Kokkos_StagingSpace_ViewMapping.hpp>
 #include <Kokkos_StagingSpace_CopyViews.hpp>
+#include <Kokkos_Staging_API.hpp>
 
 #endif //KOKKOS_STAGINGSPACE_HPP
