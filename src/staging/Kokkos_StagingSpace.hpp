@@ -83,6 +83,12 @@ class StagingSpace {
 
   size_t read_data(void * dst, const size_t dst_size);
 
+  void set_version(const size_t ver) { version = ver; }
+
+  const std::string get_var_name() { return var_name; }
+
+  void set_var_name(const std::string var_name_) { var_name = var_name_; }
+
 
   /**\brief Return Name of the MemorySpace */
   static constexpr const char* name() { return m_name; }
@@ -261,5 +267,6 @@ struct DeepCopy<Kokkos::HostSpace, Kokkos::StagingSpace, ExecutionSpace> {
 #include <Kokkos_StagingSpace_SharedAlloc.hpp>
 #include <Kokkos_StagingSpace_ViewMapping.hpp>
 #include <Kokkos_StagingSpace_CopyViews.hpp>
+#include <Kokkos_Staging_API.hpp>
 
 #endif //KOKKOS_STAGINGSPACE_HPP
