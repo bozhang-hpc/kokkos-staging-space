@@ -13,6 +13,111 @@ inline void finalize() {
 }
 
 template <class DT, class... DP>
+inline void set_lower_bound(
+    const View<DT, DP...>& dst, 
+    const size_t lb_N0,
+    const size_t lb_N1 = KOKKOS_IMPL_CTOR_DEFAULT_ARG,
+    const size_t lb_N2 = KOKKOS_IMPL_CTOR_DEFAULT_ARG,
+    const size_t lb_N3 = KOKKOS_IMPL_CTOR_DEFAULT_ARG,
+    const size_t lb_N4 = KOKKOS_IMPL_CTOR_DEFAULT_ARG,
+    const size_t lb_N5 = KOKKOS_IMPL_CTOR_DEFAULT_ARG,
+    const size_t lb_N6 = KOKKOS_IMPL_CTOR_DEFAULT_ARG,
+    const size_t lb_N7 = KOKKOS_IMPL_CTOR_DEFAULT_ARG,
+    typename std::enable_if<(
+        std::is_same<typename ViewTraits<DT, DP...>::specialize, 
+        Kokkos::StagingSpaceSpecializeTag>::value &&
+        unsigned(ViewTraits<DT, DP...>::rank) != 0)>::type* = nullptr) {
+
+    using dst_type          = View<DT, DP...>;
+    using dst_memory_space  = typename dst_type::memory_space;
+
+    unsigned int rank_check = (lb_N1 == KOKKOS_IMPL_CTOR_DEFAULT_ARG) ? 1 : 
+                     (lb_N2 == KOKKOS_IMPL_CTOR_DEFAULT_ARG) ? 2 :
+                     (lb_N3 == KOKKOS_IMPL_CTOR_DEFAULT_ARG) ? 3 :
+                     (lb_N4 == KOKKOS_IMPL_CTOR_DEFAULT_ARG) ? 4 :
+                     (lb_N5 == KOKKOS_IMPL_CTOR_DEFAULT_ARG) ? 5 :
+                     (lb_N6 == KOKKOS_IMPL_CTOR_DEFAULT_ARG) ? 6 :
+                     (lb_N7 == KOKKOS_IMPL_CTOR_DEFAULT_ARG) ? 7 : 8;
+
+    //throw if dimension mismatch
+    if(rank_check != (unsigned(dst_type::rank))) {
+        std::string message (
+          "Deprecation Error: Kokkos::set_lower_bound requires same rank as View has.");
+
+        Kokkos::Impl::throw_runtime_exception(message);
+    }
+    
+
+    size_t lb[8];
+    lb[0] = lb_N0;
+    lb[1] = lb_N1;
+    lb[2] = lb_N2;
+    lb[3] = lb_N3;
+    lb[4] = lb_N4;
+    lb[5] = lb_N5;
+    lb[6] = lb_N6;
+    lb[7] = lb_N7;
+
+    Kokkos::Impl::SharedAllocationRecord<dst_memory_space, void>* 
+                                  dst_record = dst.impl_track().template get_record<dst_memory_space>();
+
+    const_cast<dst_memory_space&> (dst_record->m_space).set_lb(lb);
+
+}
+
+template <class DT, class... DP>
+inline void set_upper_bound(
+    const View<DT, DP...>& dst, 
+    const size_t ub_N0,
+    const size_t ub_N1 = KOKKOS_IMPL_CTOR_DEFAULT_ARG,
+    const size_t ub_N2 = KOKKOS_IMPL_CTOR_DEFAULT_ARG,
+    const size_t ub_N3 = KOKKOS_IMPL_CTOR_DEFAULT_ARG,
+    const size_t ub_N4 = KOKKOS_IMPL_CTOR_DEFAULT_ARG,
+    const size_t ub_N5 = KOKKOS_IMPL_CTOR_DEFAULT_ARG,
+    const size_t ub_N6 = KOKKOS_IMPL_CTOR_DEFAULT_ARG,
+    const size_t ub_N7 = KOKKOS_IMPL_CTOR_DEFAULT_ARG,
+    typename std::enable_if<(
+        std::is_same<typename ViewTraits<DT, DP...>::specialize, 
+        Kokkos::StagingSpaceSpecializeTag>::value &&
+        unsigned(ViewTraits<DT, DP...>::rank) != 0)>::type* = nullptr) {
+
+    using dst_type          = View<DT, DP...>;
+    using dst_memory_space  = typename dst_type::memory_space;
+
+    unsigned int rank_check = (ub_N1 == KOKKOS_IMPL_CTOR_DEFAULT_ARG) ? 1 : 
+                     (ub_N2 == KOKKOS_IMPL_CTOR_DEFAULT_ARG) ? 2 :
+                     (ub_N3 == KOKKOS_IMPL_CTOR_DEFAULT_ARG) ? 3 :
+                     (ub_N4 == KOKKOS_IMPL_CTOR_DEFAULT_ARG) ? 4 :
+                     (ub_N5 == KOKKOS_IMPL_CTOR_DEFAULT_ARG) ? 5 :
+                     (ub_N6 == KOKKOS_IMPL_CTOR_DEFAULT_ARG) ? 6 :
+                     (ub_N7 == KOKKOS_IMPL_CTOR_DEFAULT_ARG) ? 7 : 8;
+
+    //throw if dimension mismatch
+    if(rank_check != (unsigned(dst_type::rank))) {
+        std::string message (
+          "Deprecation Error: Kokkos::set_upper_bound requires same rank as View has.");
+
+        Kokkos::Impl::throw_runtime_exception(message);
+    }
+
+    size_t ub[8];
+    ub[0] = ub_N0;
+    ub[1] = ub_N1;
+    ub[2] = ub_N2;
+    ub[3] = ub_N3;
+    ub[4] = ub_N4;
+    ub[5] = ub_N5;
+    ub[6] = ub_N6;
+    ub[7] = ub_N7;
+
+    Kokkos::Impl::SharedAllocationRecord<dst_memory_space, void>* 
+                                  dst_record = dst.impl_track().template get_record<dst_memory_space>();
+
+    const_cast<dst_memory_space&> (dst_record->m_space).set_ub(ub);
+
+}
+
+template <class DT, class... DP>
 inline void set_version(const View<DT, DP...>& dst, size_t version,
                         typename std::enable_if<
                         std::is_same<typename ViewTraits<DT, DP...>::specialize, 
@@ -85,7 +190,7 @@ inline void view_bind_layout(const View<DT, DP...>& dst, const View<ST, SP...>& 
                                   src_record = src.impl_track().template get_record<dst_memory_space>();
 
     const_cast<Kokkos::StagingSpace&> (dst_record->m_space).set_var_name(
-        const_cast<Kokkos::StagingSpace&> (dst_record->m_space).get_var_name());
+        const_cast<Kokkos::StagingSpace&> (src_record->m_space).get_var_name());
 
 }
 

@@ -99,6 +99,17 @@ class StagingSpace {
   static void checkpoint_create_view_targets();
 
   static void set_default_path( const std::string path );
+
+  void set_lb(const size_t* lb);
+
+  void set_ub(const size_t* ub);
+
+  void set_version(const size_t ver);
+
+  const std::string get_var_name() { return var_name; }
+
+  void set_var_name(const std::string var_name_);
+
   static std::string s_default_path;
 
   //static std::map<const std::string, KokkosDataspacesAccessor> m_accessor_map;
@@ -106,7 +117,9 @@ class StagingSpace {
 private:
   
   std::string get_timestep(std::string path, size_t &ts);
-  void index_reverse();
+  void lb_reverse();
+  void ub_reverse();
+  void lb_ub_reverse();
 
   size_t rank; // rank of the dataset (number of dimensions)
   size_t version;         // version of the dataset

@@ -23,7 +23,23 @@ std::string StagingSpace::get_timestep(std::string path, size_t& ts) {
   return "";
 }
 
-void StagingSpace::index_reverse() {
+void StagingSpace::lb_reverse() {
+  for(int i=0; i<rank/2; i++) {
+    uint64_t temp_lb = lb[i];
+    lb[i] = lb[rank-1-i];
+    lb[rank-1-i] = temp_lb;
+  }
+}
+
+void StagingSpace::ub_reverse() {
+  for(int i=0; i<rank/2; i++) {
+    uint64_t temp_ub = ub[i];
+    ub[i] = ub[rank-1-i];
+    ub[rank-1-i] = temp_ub;
+  }
+}
+
+void StagingSpace::lb_ub_reverse() {
   for(int i=0; i<rank/2; i++) {
     uint64_t temp_lb = lb[i];
     lb[i] = lb[rank-1-i];
@@ -163,12 +179,12 @@ void* StagingSpace::allocate(const size_t arg_alloc_size, const std::string& pat
 
       case LAYOUT_RIGHT:
         m_layout = dspaces_LAYOUT_RIGHT;
-        index_reverse();
+        lb_ub_reverse();
         break;
 
       default:
         m_layout = dspaces_LAYOUT_RIGHT;
-        index_reverse();
+        lb_ub_reverse();
         break;
       }
 
@@ -204,6 +220,54 @@ size_t StagingSpace::read_data(void * dst, const size_t dst_size) {
     printf("Error with read: %d \n", err);
   }
   return dataRead;
+}
+
+void StagingSpace::set_lb(const size_t* lb_) {
+  for(int i=0; i<rank; i++) {
+    lb[i] = lb_[i];
+  }
+
+  switch (m_layout)
+  {
+  case dspaces_LAYOUT_LEFT:
+    break;
+
+  case dspaces_LAYOUT_RIGHT:
+    lb_reverse();
+    break;
+  
+  default:
+    lb_reverse();
+    break;
+  }
+}
+
+void StagingSpace::set_ub(const size_t* ub_) {
+  for(int i=0; i<rank; i++) {
+    ub[i] = ub_[i];
+  }
+
+  switch (m_layout)
+  {
+  case dspaces_LAYOUT_LEFT:
+    break;
+
+  case dspaces_LAYOUT_RIGHT:
+    ub_reverse();
+    break;
+  
+  default:
+    ub_reverse();
+    break;
+  }
+}
+
+void StagingSpace::set_version(const size_t ver) {
+  version = ver;
+}
+
+void StagingSpace::set_var_name(const std::string var_name_) {
+  var_name = var_name_;
 }
 
 } // Kokkos
