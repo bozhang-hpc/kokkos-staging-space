@@ -39,15 +39,29 @@ inline void set_lower_bound(
                      (lb_N6 == KOKKOS_IMPL_CTOR_DEFAULT_ARG) ? 6 :
                      (lb_N7 == KOKKOS_IMPL_CTOR_DEFAULT_ARG) ? 7 : 8;
 
-    static_assert((unsigned(dst_type::rank) == rank_check),
-                    "set_lower_bound requires same rank as View has");
+    //throw if dimension mismatch
+    if(rank_check != (unsigned(dst_type::rank))) {
+        std::string message (
+          "Deprecation Error: Kokkos::set_lower_bound requires same rank as View has.");
 
+        Kokkos::Impl::throw_runtime_exception(message);
+    }
+    
+
+    size_t lb[8];
+    lb[0] = lb_N0;
+    lb[1] = lb_N1;
+    lb[2] = lb_N2;
+    lb[3] = lb_N3;
+    lb[4] = lb_N4;
+    lb[5] = lb_N5;
+    lb[6] = lb_N6;
+    lb[7] = lb_N7;
 
     Kokkos::Impl::SharedAllocationRecord<dst_memory_space, void>* 
                                   dst_record = dst.impl_track().template get_record<dst_memory_space>();
 
-    const_cast<dst_memory_space&> (dst_record->m_space).set_lb(lb_N0, lb_N1, lb_N2, lb_N3,
-                                                                    lb_N4, lb_N5, lb_N6, lb_N7);
+    const_cast<dst_memory_space&> (dst_record->m_space).set_lb(lb);
 
 }
 
@@ -78,14 +92,28 @@ inline void set_upper_bound(
                      (ub_N6 == KOKKOS_IMPL_CTOR_DEFAULT_ARG) ? 6 :
                      (ub_N7 == KOKKOS_IMPL_CTOR_DEFAULT_ARG) ? 7 : 8;
 
-    static_assert((unsigned(dst_type::rank) == rank_check),
-                    "set_upper_bound requires same rank as View has");
+    //throw if dimension mismatch
+    if(rank_check != (unsigned(dst_type::rank))) {
+        std::string message (
+          "Deprecation Error: Kokkos::set_upper_bound requires same rank as View has.");
+
+        Kokkos::Impl::throw_runtime_exception(message);
+    }
+
+    size_t ub[8];
+    ub[0] = ub_N0;
+    ub[1] = ub_N1;
+    ub[2] = ub_N2;
+    ub[3] = ub_N3;
+    ub[4] = ub_N4;
+    ub[5] = ub_N5;
+    ub[6] = ub_N6;
+    ub[7] = ub_N7;
 
     Kokkos::Impl::SharedAllocationRecord<dst_memory_space, void>* 
                                   dst_record = dst.impl_track().template get_record<dst_memory_space>();
 
-    const_cast<dst_memory_space&> (dst_record->m_space).set_ub(ub_N0, ub_N1, ub_N2, ub_N3,
-                                                                    ub_N4, ub_N5, ub_N6, ub_N7);
+    const_cast<dst_memory_space&> (dst_record->m_space).set_ub(ub);
 
 }
 
@@ -163,7 +191,7 @@ inline void view_bind_layout(const View<DT, DP...>& dst, const View<ST, SP...>& 
                                   src_record = src.impl_track().template get_record<dst_memory_space>();
 
     const_cast<Kokkos::StagingSpace&> (dst_record->m_space).set_var_name(
-        const_cast<Kokkos::StagingSpace&> (dst_record->m_space).get_var_name());
+        const_cast<Kokkos::StagingSpace&> (src_record->m_space).get_var_name());
 
 }
 

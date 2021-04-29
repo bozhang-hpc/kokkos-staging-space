@@ -93,21 +93,15 @@ class StagingSpace {
 
   static void set_default_path( const std::string path );
 
-  void set_lb(const size_t lb_N0, const size_t lb_N1,
-              const size_t lb_N2, const size_t lb_N3,
-              const size_t lb_N4, const size_t lb_N5,
-              const size_t lb_N6, const size_t lb_N7);
+  void set_lb(const size_t* lb);
 
-  void set_ub(const size_t ub_N0, const size_t ub_N1,
-              const size_t ub_N2, const size_t ub_N3,
-              const size_t ub_N4, const size_t ub_N5,
-              const size_t ub_N6, const size_t ub_N7);
+  void set_ub(const size_t* ub);
 
   void set_version(const size_t ver);
 
   const std::string get_var_name() { return var_name; }
 
-  void set_var_name(const std::string path);
+  void set_var_name(const std::string var_name_);
 
   //const enum ds_layout_type get_layout() { return m_layout; }
 
@@ -120,7 +114,9 @@ class StagingSpace {
 private:
   
   std::string get_timestep(std::string path, size_t &ts);
-  void index_reverse();
+  void lb_reverse();
+  void ub_reverse();
+  void lb_ub_reverse();
 
   size_t rank;            // rank of the dataset (number of dimensions)
   size_t version;         // version of the dataset

@@ -27,7 +27,11 @@ int main(int argc, char** argv)
 
     ViewHost_lr_t v_P("PutView", i1, i2);
     ViewStaging_lr_t v_S(v_s_label, i1, i2);
+    Kokkos::Staging::set_lower_bound(v_S, 1, 1);
+    Kokkos::Staging::set_upper_bound(v_S, 8, 8);
     ViewStaging_ll_t v_S_ll("Whatever", i1, i2);
+    Kokkos::Staging::set_lower_bound(v_S_ll, 1, 1);
+    Kokkos::Staging::set_upper_bound(v_S_ll, 8, 8);
     ViewHost_ll_t v_G("GetView", i1, i2);
 
     Kokkos::Staging::view_bind_layout(v_S_ll, v_S);

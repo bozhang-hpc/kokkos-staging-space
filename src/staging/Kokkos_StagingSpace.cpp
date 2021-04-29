@@ -24,7 +24,23 @@ std::string StagingSpace::get_timestep(std::string path, size_t& ts) {
   return "";
 }
 
-void StagingSpace::index_reverse() {
+void StagingSpace::lb_reverse() {
+  for(int i=0; i<rank/2; i++) {
+    uint64_t temp_lb = lb[i];
+    lb[i] = lb[rank-1-i];
+    lb[rank-1-i] = temp_lb;
+  }
+}
+
+void StagingSpace::ub_reverse() {
+  for(int i=0; i<rank/2; i++) {
+    uint64_t temp_ub = ub[i];
+    ub[i] = ub[rank-1-i];
+    ub[rank-1-i] = temp_ub;
+  }
+}
+
+void StagingSpace::lb_ub_reverse() {
   for(int i=0; i<rank/2; i++) {
     uint64_t temp_lb = lb[i];
     lb[i] = lb[rank-1-i];
@@ -176,12 +192,12 @@ void* StagingSpace::allocate(const size_t arg_alloc_size, const std::string& pat
 
       case LAYOUT_RIGHT:
         m_layout = dspaces_LAYOUT_RIGHT;
-        index_reverse();
+        lb_ub_reverse();
         break;
 
       default:
         m_layout = dspaces_LAYOUT_RIGHT;
-        index_reverse();
+        lb_ub_reverse();
         break;
       }
 
@@ -237,34 +253,44 @@ size_t StagingSpace::read_data(void * dst, const size_t dst_size) {
   return dataRead;
 }
 
-void StagingSpace::set_lb(const size_t lb_N0, const size_t lb_N1,
-                          const size_t lb_N2, const size_t lb_N3,
-                          const size_t lb_N4, const size_t lb_N5,
-                          const size_t lb_N6, const size_t lb_N7) {
-  lb[0] = lb_N0;
-  lb[1] = lb_N1;
-  lb[2] = lb_N2;
-  lb[3] = lb_N3;
-  lb[4] = lb_N4;
-  lb[5] = lb_N5;
-  lb[6] = lb_N6;
-  lb[7] = lb_N7;
+void StagingSpace::set_lb(const size_t* lb_) {
+  for(int i=0; i<rank; i++) {
+    lb[i] = lb_[i];
+  }
 
+  switch (m_layout)
+  {
+  case dspaces_LAYOUT_LEFT:
+    break;
+
+  case dspaces_LAYOUT_RIGHT:
+    lb_reverse();
+    break;
+  
+  default:
+    lb_reverse();
+    break;
+  }
 }
 
-void StagingSpace::set_ub(const size_t ub_N0, const size_t ub_N1,
-                          const size_t ub_N2, const size_t ub_N3,
-                          const size_t ub_N4, const size_t ub_N5,
-                          const size_t ub_N6, const size_t ub_N7) {
-  ub[0] = ub_N0;
-  ub[1] = ub_N1;
-  ub[2] = ub_N2;
-  ub[3] = ub_N3;
-  ub[4] = ub_N4;
-  ub[5] = ub_N5;
-  ub[6] = ub_N6;
-  ub[7] = ub_N7;
+void StagingSpace::set_ub(const size_t* ub_) {
+  for(int i=0; i<rank; i++) {
+    ub[i] = ub_[i];
+  }
+
+  switch (m_layout)
+  {
+  case dspaces_LAYOUT_LEFT:
+    break;
+
+  case dspaces_LAYOUT_RIGHT:
+    ub_reverse();
+    break;
   
+  default:
+    ub_reverse();
+    break;
+  }
 }
 
 void StagingSpace::set_version(const size_t ver) {
