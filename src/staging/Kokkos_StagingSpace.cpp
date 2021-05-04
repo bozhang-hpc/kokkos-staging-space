@@ -156,6 +156,10 @@ void StagingSpace::finalize() {
   dspaces_fini(ndcl);
 }
 
+void StagingSpace::terminate() {
+  dspaces_kill(ndcl);
+}
+
 void* StagingSpace::allocate(const size_t arg_alloc_size, const std::string& path_,
                               const size_t rank_, 
                               const enum data_layout layout,

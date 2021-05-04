@@ -78,6 +78,7 @@ class StagingSpace {
 
   static void initialize();
   static void finalize();
+  static void terminate();
 
   size_t write_data(const void * src, const size_t src_size);
 

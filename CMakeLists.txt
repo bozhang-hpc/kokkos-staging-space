@@ -11,6 +11,7 @@ find_package(MPI REQUIRED)
 find_package(DataSpaces REQUIRED)
 
 option(Kokkos_ENABLE_TESTS   "Whether to enable tests" OFF)
+option(Kokkos_ENABLE_EVAl   "Whether to enable evaluation" OFF)
 
 set(KOKKOS_STAGING_SRCS)
 file(GLOB SRCS src/staging/*.cpp)
@@ -72,4 +73,8 @@ install(EXPORT
 IF (Kokkos_ENABLE_TESTS)
   enable_testing()
   add_subdirectory(tests)
+ENDIF()
+
+IF (Kokkos_ENABLE_EVAl)
+  add_subdirectory(evaluation)
 ENDIF()

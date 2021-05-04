@@ -1,3 +1,6 @@
+#ifndef KOKKOS_STAGING_API_HPP
+#define KOKKOS_STAGING_API_HPP
+
 #include <Kokkos_Macros.hpp>
 #include <Kokkos_StagingSpace.hpp>
 
@@ -10,6 +13,10 @@ inline void initialize() {
 
 inline void finalize() {
     Kokkos::StagingSpace::finalize();
+}
+
+inline void terminate() {
+    Kokkos::StagingSpace::terminate();
 }
 
 template <class DT, class... DP>
@@ -199,3 +206,5 @@ inline void view_bind_layout(const View<DT, DP...>& dst, const View<ST, SP...>& 
 
 } //namespace Staging
 } //namespace Kokkos
+
+#endif // KOKKOS_STAGING_API_HPP
