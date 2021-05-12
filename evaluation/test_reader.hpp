@@ -6,18 +6,19 @@
 #include <iostream>
 #include <string>
 #include "timer.hpp"
+#include "unistd.h"
 #include "mpi.h"
 // only support 1 var_num now.
 template <class Data_t, unsigned int Dims, class Layout>
 struct kokkos_run {
     static int get_run (MPI_Comm gcomm, int* np, uint64_t* sp, int timesteps, int var_num,
-                        std::string log_name, bool terminate);
+                        int delay, int interval, std::string log_name, bool terminate);
 };
 
 template <class Data_t, class Layout>
 struct kokkos_run<Data_t, 1, Layout> {
 static int get_run (MPI_Comm gcomm, int* np, uint64_t* sp, int timesteps, int var_num,
-                    std::string log_name, bool terminate)
+                    int delay, int interval, std::string log_name, bool terminate)
 {
     int rank, nprocs;
     MPI_Comm_size(gcomm, &nprocs);
@@ -58,7 +59,7 @@ static int get_run (MPI_Comm gcomm, int* np, uint64_t* sp, int timesteps, int va
         log << "step\tread_gs" << std::endl;
     }
 
-    for(int ts=1; ts<=timesteps; ts++) {
+    for(int ts=1; ts<=timesteps; ts+=interval) {
 
         Kokkos::Staging::set_version(v_S, ts);
 
@@ -69,6 +70,8 @@ static int get_run (MPI_Comm gcomm, int* np, uint64_t* sp, int timesteps, int va
         Kokkos::deep_copy(v_G, v_S);
 
         double time_read = timer_read.stop();
+
+        sleep(delay);
 
         double *avg_time_read = nullptr;
 
@@ -113,7 +116,7 @@ static int get_run (MPI_Comm gcomm, int* np, uint64_t* sp, int timesteps, int va
 template <class Data_t, class Layout>
 struct kokkos_run<Data_t, 2, Layout> {
 static int get_run (MPI_Comm gcomm, int* np, uint64_t* sp, int timesteps, int var_num,
-                    std::string log_name, bool terminate)
+                    int delay, int interval, std::string log_name, bool terminate)
 {
     int rank, nprocs;
     MPI_Comm_size(gcomm, &nprocs);
@@ -154,7 +157,7 @@ static int get_run (MPI_Comm gcomm, int* np, uint64_t* sp, int timesteps, int va
         log << "step\tread_gs" << std::endl;
     }
 
-    for(int ts=1; ts<=timesteps; ts++) {
+    for(int ts=1; ts<=timesteps; ts+=interval) {
 
         Kokkos::Staging::set_version(v_S, ts);
 
@@ -165,6 +168,8 @@ static int get_run (MPI_Comm gcomm, int* np, uint64_t* sp, int timesteps, int va
         Kokkos::deep_copy(v_G, v_S);
 
         double time_read = timer_read.stop();
+
+        sleep(delay);
 
         double *avg_time_read = nullptr;
 
@@ -209,7 +214,7 @@ static int get_run (MPI_Comm gcomm, int* np, uint64_t* sp, int timesteps, int va
 template <class Data_t, class Layout>
 struct kokkos_run<Data_t, 3, Layout> {
 static int get_run (MPI_Comm gcomm, int* np, uint64_t* sp, int timesteps, int var_num,
-                    std::string log_name, bool terminate)
+                    int delay, int interval, std::string log_name, bool terminate)
 {
     int rank, nprocs;
     MPI_Comm_size(gcomm, &nprocs);
@@ -250,7 +255,7 @@ static int get_run (MPI_Comm gcomm, int* np, uint64_t* sp, int timesteps, int va
         log << "step\tread_gs" << std::endl;
     }
 
-    for(int ts=1; ts<=timesteps; ts++) {
+    for(int ts=1; ts<=timesteps; ts+=interval) {
 
         Kokkos::Staging::set_version(v_S, ts);
 
@@ -261,6 +266,8 @@ static int get_run (MPI_Comm gcomm, int* np, uint64_t* sp, int timesteps, int va
         Kokkos::deep_copy(v_G, v_S);
 
         double time_read = timer_read.stop();
+
+        sleep(delay);
 
         double *avg_time_read = nullptr;
 
@@ -315,7 +322,7 @@ static int get_run (MPI_Comm gcomm, int* np, uint64_t* sp, int timesteps, int va
 template <class Data_t, class Layout>
 struct kokkos_run<Data_t, 4, Layout> {
 static int get_run (MPI_Comm gcomm, int* np, uint64_t* sp, int timesteps, int var_num,
-                    std::string log_name, bool terminate)
+                    int delay, int interval, std::string log_name, bool terminate)
 {
     int rank, nprocs;
     MPI_Comm_size(gcomm, &nprocs);
@@ -356,7 +363,7 @@ static int get_run (MPI_Comm gcomm, int* np, uint64_t* sp, int timesteps, int va
         log << "step\tread_gs" << std::endl;
     }
 
-    for(int ts=1; ts<=timesteps; ts++) {
+    for(int ts=1; ts<=timesteps; ts+=interval) {
 
         Kokkos::Staging::set_version(v_S, ts);
 
@@ -367,6 +374,8 @@ static int get_run (MPI_Comm gcomm, int* np, uint64_t* sp, int timesteps, int va
         Kokkos::deep_copy(v_G, v_S);
 
         double time_read = timer_read.stop();
+
+        sleep(delay);
 
         double *avg_time_read = nullptr;
 
@@ -411,7 +420,7 @@ static int get_run (MPI_Comm gcomm, int* np, uint64_t* sp, int timesteps, int va
 template <class Data_t, class Layout>
 struct kokkos_run<Data_t, 5, Layout> {
 static int get_run (MPI_Comm gcomm, int* np, uint64_t* sp, int timesteps, int var_num,
-                    std::string log_name, bool terminate)
+                    int delay, int interval, std::string log_name, bool terminate)
 {
     int rank, nprocs;
     MPI_Comm_size(gcomm, &nprocs);
@@ -452,7 +461,7 @@ static int get_run (MPI_Comm gcomm, int* np, uint64_t* sp, int timesteps, int va
         log << "step\tread_gs" << std::endl;
     }
 
-    for(int ts=1; ts<=timesteps; ts++) {
+    for(int ts=1; ts<=timesteps; ts+=interval) {
 
         Kokkos::Staging::set_version(v_S, ts);
 
@@ -463,6 +472,8 @@ static int get_run (MPI_Comm gcomm, int* np, uint64_t* sp, int timesteps, int va
         Kokkos::deep_copy(v_G, v_S);
 
         double time_read = timer_read.stop();
+
+        sleep(delay);
 
         double *avg_time_read = nullptr;
 
@@ -507,7 +518,7 @@ static int get_run (MPI_Comm gcomm, int* np, uint64_t* sp, int timesteps, int va
 template <class Data_t, class Layout>
 struct kokkos_run<Data_t, 6, Layout> {
 static int get_run (MPI_Comm gcomm, int* np, uint64_t* sp, int timesteps, int var_num,
-                    std::string log_name, bool terminate)
+                    int delay, int interval, std::string log_name, bool terminate)
 {
     int rank, nprocs;
     MPI_Comm_size(gcomm, &nprocs);
@@ -548,7 +559,7 @@ static int get_run (MPI_Comm gcomm, int* np, uint64_t* sp, int timesteps, int va
         log << "step\tread_gs" << std::endl;
     }
 
-    for(int ts=1; ts<=timesteps; ts++) {
+    for(int ts=1; ts<=timesteps; ts+=interval) {
 
         Kokkos::Staging::set_version(v_S, ts);
 
@@ -559,6 +570,8 @@ static int get_run (MPI_Comm gcomm, int* np, uint64_t* sp, int timesteps, int va
         Kokkos::deep_copy(v_G, v_S);
 
         double time_read = timer_read.stop();
+
+        sleep(delay);
 
         double *avg_time_read = nullptr;
 
@@ -603,7 +616,7 @@ static int get_run (MPI_Comm gcomm, int* np, uint64_t* sp, int timesteps, int va
 template <class Data_t, class Layout>
 struct kokkos_run<Data_t, 7, Layout> {
 static int get_run (MPI_Comm gcomm, int* np, uint64_t* sp, int timesteps, int var_num,
-                    std::string log_name, bool terminate)
+                    int delay, int interval, std::string log_name, bool terminate)
 {
     int rank, nprocs;
     MPI_Comm_size(gcomm, &nprocs);
@@ -644,7 +657,7 @@ static int get_run (MPI_Comm gcomm, int* np, uint64_t* sp, int timesteps, int va
         log << "step\tread_gs" << std::endl;
     }
 
-    for(int ts=1; ts<=timesteps; ts++) {
+    for(int ts=1; ts<=timesteps; ts+=interval) {
 
         Kokkos::Staging::set_version(v_S, ts);
 
@@ -655,6 +668,8 @@ static int get_run (MPI_Comm gcomm, int* np, uint64_t* sp, int timesteps, int va
         Kokkos::deep_copy(v_G, v_S);
 
         double time_read = timer_read.stop();
+
+        sleep(delay);
 
         double *avg_time_read = nullptr;
 
@@ -699,7 +714,7 @@ static int get_run (MPI_Comm gcomm, int* np, uint64_t* sp, int timesteps, int va
 template <class Data_t, class Layout>
 struct kokkos_run<Data_t, 8, Layout> {
 static int get_run (MPI_Comm gcomm, int* np, uint64_t* sp, int timesteps, int var_num,
-                    std::string log_name, bool terminate)
+                    int delay, int interval, std::string log_name, bool terminate)
 {
     int rank, nprocs;
     MPI_Comm_size(gcomm, &nprocs);
@@ -740,7 +755,7 @@ static int get_run (MPI_Comm gcomm, int* np, uint64_t* sp, int timesteps, int va
         log << "step\tread_gs" << std::endl;
     }
 
-    for(int ts=1; ts<=timesteps; ts++) {
+    for(int ts=1; ts<=timesteps; ts+=interval) {
 
         Kokkos::Staging::set_version(v_S, ts);
 
@@ -751,6 +766,8 @@ static int get_run (MPI_Comm gcomm, int* np, uint64_t* sp, int timesteps, int va
         Kokkos::deep_copy(v_G, v_S);
 
         double time_read = timer_read.stop();
+
+        sleep(delay);
 
         double *avg_time_read = nullptr;
 

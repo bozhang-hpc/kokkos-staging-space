@@ -5,16 +5,19 @@
 #include <Kokkos_StagingSpace.hpp>
 #include <iostream>
 #include "timer.hpp"
+#include "unistd.h"
 #include "mpi.h"
 // only support 1 var_num now.
 template <class Data_t, unsigned int Dims, class Layout>
 struct kokkos_run {
-    static int put_run (MPI_Comm gcomm, int* np, uint64_t* sp, int timesteps, int var_num, bool terminate);
+    static int put_run (MPI_Comm gcomm, int* np, uint64_t* sp, int timesteps, int var_num,
+                        int delay, std::string log_name, bool terminate);
 };
 
 template <class Data_t, class Layout>
 struct kokkos_run<Data_t, 1, Layout> {
-static int put_run (MPI_Comm gcomm, int* np, uint64_t* sp, int timesteps, int var_num, bool terminate)
+static int put_run (MPI_Comm gcomm, int* np, uint64_t* sp, int timesteps, int var_num,
+                    int delay, std::string log_name, bool terminate)
 {
     int rank, nprocs;
     MPI_Comm_size(gcomm, &nprocs);
@@ -51,7 +54,7 @@ static int put_run (MPI_Comm gcomm, int* np, uint64_t* sp, int timesteps, int va
 
     if(rank == 0) {
         avg_write = (double*) malloc(sizeof(double)*timesteps);
-        log.open("test_writer.log", std::ofstream::out | std::ofstream::trunc);
+        log.open(log_name, std::ofstream::out | std::ofstream::trunc);
         log << "step\twrite_gs" << std::endl;
     }
 
@@ -60,6 +63,8 @@ static int put_run (MPI_Comm gcomm, int* np, uint64_t* sp, int timesteps, int va
         Kokkos::parallel_for(sp[0], KOKKOS_LAMBDA(const int i0) {
             v_P(i0) = i0 + 0.01*ts;         
         });
+
+        sleep(delay);
 
         Kokkos::Staging::set_version(v_S, ts);
 
@@ -113,7 +118,8 @@ static int put_run (MPI_Comm gcomm, int* np, uint64_t* sp, int timesteps, int va
 
 template <class Data_t, class Layout>
 struct kokkos_run<Data_t, 2, Layout> {
-static int put_run (MPI_Comm gcomm, int* np, uint64_t* sp, int timesteps, int var_num, bool terminate)
+static int put_run (MPI_Comm gcomm, int* np, uint64_t* sp, int timesteps, int var_num,
+                    int delay, std::string log_name, bool terminate)
 {
     int rank, nprocs;
     MPI_Comm_size(gcomm, &nprocs);
@@ -150,7 +156,7 @@ static int put_run (MPI_Comm gcomm, int* np, uint64_t* sp, int timesteps, int va
 
     if(rank == 0) {
         avg_write = (double*) malloc(sizeof(double)*timesteps);
-        log.open("test_writer.log", std::ofstream::out | std::ofstream::trunc);
+        log.open(log_name, std::ofstream::out | std::ofstream::trunc);
         log << "step\twrite_gs" << std::endl;
     }
 
@@ -161,6 +167,8 @@ static int put_run (MPI_Comm gcomm, int* np, uint64_t* sp, int timesteps, int va
                 v_P(i0,i1) = i0*sp[1]+i1 + 0.01*ts;
             }
         });
+
+        sleep(delay);
 
         Kokkos::Staging::set_version(v_S, ts);
 
@@ -214,7 +222,8 @@ static int put_run (MPI_Comm gcomm, int* np, uint64_t* sp, int timesteps, int va
 
 template <class Data_t, class Layout>
 struct kokkos_run<Data_t, 3, Layout> {
-static int put_run (MPI_Comm gcomm, int* np, uint64_t* sp, int timesteps, int var_num, bool terminate)
+static int put_run (MPI_Comm gcomm, int* np, uint64_t* sp, int timesteps, int var_num,
+                    int delay, std::string log_name, bool terminate)
 {
     int rank, nprocs;
     MPI_Comm_size(gcomm, &nprocs);
@@ -251,7 +260,7 @@ static int put_run (MPI_Comm gcomm, int* np, uint64_t* sp, int timesteps, int va
 
     if(rank == 0) {
         avg_write = (double*) malloc(sizeof(double)*timesteps);
-        log.open("test_writer.log", std::ofstream::out | std::ofstream::trunc);
+        log.open(log_name, std::ofstream::out | std::ofstream::trunc);
         log << "step\twrite_gs" << std::endl;
     }
 
@@ -261,12 +270,14 @@ static int put_run (MPI_Comm gcomm, int* np, uint64_t* sp, int timesteps, int va
             for(int i1=0; i1<sp[1]; i1++) {
                 for(int i2=0; i2<sp[2]; i2++) {
                     v_P(i0,i1,i2) = (i0*sp[1]+i1)*sp[2]+i2 + 0.01*ts;
-                    std::cout<<v_P(i0,i1,i2)<<"\t";
+                    //std::cout<<v_P(i0,i1,i2)<<"\t";
                 }
-                std::cout<<std::endl;
+                //std::cout<<std::endl;
             }
-            std::cout<<"******************"<<std::endl;
+            //std::cout<<"******************"<<std::endl;
         });
+
+        sleep(delay);
 
         Kokkos::Staging::set_version(v_S, ts);
 
@@ -320,7 +331,8 @@ static int put_run (MPI_Comm gcomm, int* np, uint64_t* sp, int timesteps, int va
 
 template <class Data_t, class Layout>
 struct kokkos_run<Data_t, 4, Layout> {
-static int put_run (MPI_Comm gcomm, int* np, uint64_t* sp, int timesteps, int var_num, bool terminate)
+static int put_run (MPI_Comm gcomm, int* np, uint64_t* sp, int timesteps, int var_num,
+                    int delay, std::string log_name, bool terminate)
 {
     int rank, nprocs;
     MPI_Comm_size(gcomm, &nprocs);
@@ -357,7 +369,7 @@ static int put_run (MPI_Comm gcomm, int* np, uint64_t* sp, int timesteps, int va
 
     if(rank == 0) {
         avg_write = (double*) malloc(sizeof(double)*timesteps);
-        log.open("test_writer.log", std::ofstream::out | std::ofstream::trunc);
+        log.open(log_name, std::ofstream::out | std::ofstream::trunc);
         log << "step\twrite_gs" << std::endl;
     }
 
@@ -372,6 +384,8 @@ static int put_run (MPI_Comm gcomm, int* np, uint64_t* sp, int timesteps, int va
                 }
             }
         });
+
+        sleep(delay);
 
         Kokkos::Staging::set_version(v_S, ts);
 
@@ -425,7 +439,8 @@ static int put_run (MPI_Comm gcomm, int* np, uint64_t* sp, int timesteps, int va
 
 template <class Data_t, class Layout>
 struct kokkos_run<Data_t, 5, Layout> {
-static int put_run (MPI_Comm gcomm, int* np, uint64_t* sp, int timesteps, int var_num, bool terminate)
+static int put_run (MPI_Comm gcomm, int* np, uint64_t* sp, int timesteps, int var_num,
+                    int delay, std::string log_name, bool terminate)
 {
     int rank, nprocs;
     MPI_Comm_size(gcomm, &nprocs);
@@ -462,7 +477,7 @@ static int put_run (MPI_Comm gcomm, int* np, uint64_t* sp, int timesteps, int va
 
     if(rank == 0) {
         avg_write = (double*) malloc(sizeof(double)*timesteps);
-        log.open("test_writer.log", std::ofstream::out | std::ofstream::trunc);
+        log.open(log_name, std::ofstream::out | std::ofstream::trunc);
         log << "step\twrite_gs" << std::endl;
     }
 
@@ -479,6 +494,8 @@ static int put_run (MPI_Comm gcomm, int* np, uint64_t* sp, int timesteps, int va
                 }
             }
         });
+
+        sleep(delay);
 
         Kokkos::Staging::set_version(v_S, ts);
 
@@ -532,7 +549,8 @@ static int put_run (MPI_Comm gcomm, int* np, uint64_t* sp, int timesteps, int va
 
 template <class Data_t, class Layout>
 struct kokkos_run<Data_t, 6, Layout> {
-static int put_run (MPI_Comm gcomm, int* np, uint64_t* sp, int timesteps, int var_num, bool terminate)
+static int put_run (MPI_Comm gcomm, int* np, uint64_t* sp, int timesteps, int var_num,
+                    int delay, std::string log_name, bool terminate)
 {
     int rank, nprocs;
     MPI_Comm_size(gcomm, &nprocs);
@@ -569,7 +587,7 @@ static int put_run (MPI_Comm gcomm, int* np, uint64_t* sp, int timesteps, int va
 
     if(rank == 0) {
         avg_write = (double*) malloc(sizeof(double)*timesteps);
-        log.open("test_writer.log", std::ofstream::out | std::ofstream::trunc);
+        log.open(log_name, std::ofstream::out | std::ofstream::trunc);
         log << "step\twrite_gs" << std::endl;
     }
 
@@ -589,6 +607,8 @@ static int put_run (MPI_Comm gcomm, int* np, uint64_t* sp, int timesteps, int va
                 }
             }
         });
+
+        sleep(delay);
 
         Kokkos::Staging::set_version(v_S, ts);
 
@@ -642,7 +662,8 @@ static int put_run (MPI_Comm gcomm, int* np, uint64_t* sp, int timesteps, int va
 
 template <class Data_t, class Layout>
 struct kokkos_run<Data_t, 7, Layout> {
-static int put_run (MPI_Comm gcomm, int* np, uint64_t* sp, int timesteps, int var_num, bool terminate)
+static int put_run (MPI_Comm gcomm, int* np, uint64_t* sp, int timesteps, int var_num,
+                    int delay, std::string log_name, bool terminate)
 {
     int rank, nprocs;
     MPI_Comm_size(gcomm, &nprocs);
@@ -679,7 +700,7 @@ static int put_run (MPI_Comm gcomm, int* np, uint64_t* sp, int timesteps, int va
 
     if(rank == 0) {
         avg_write = (double*) malloc(sizeof(double)*timesteps);
-        log.open("test_writer.log", std::ofstream::out | std::ofstream::trunc);
+        log.open(log_name, std::ofstream::out | std::ofstream::trunc);
         log << "step\twrite_gs" << std::endl;
     }
 
@@ -701,6 +722,8 @@ static int put_run (MPI_Comm gcomm, int* np, uint64_t* sp, int timesteps, int va
                 }
             }
         });
+
+        sleep(delay);
 
         Kokkos::Staging::set_version(v_S, ts);
 
@@ -754,7 +777,8 @@ static int put_run (MPI_Comm gcomm, int* np, uint64_t* sp, int timesteps, int va
 
 template <class Data_t, class Layout>
 struct kokkos_run<Data_t, 8, Layout> {
-static int put_run (MPI_Comm gcomm, int* np, uint64_t* sp, int timesteps, int var_num, bool terminate)
+static int put_run (MPI_Comm gcomm, int* np, uint64_t* sp, int timesteps, int var_num,
+                    int delay, std::string log_name, bool terminate)
 {
     int rank, nprocs;
     MPI_Comm_size(gcomm, &nprocs);
@@ -791,7 +815,7 @@ static int put_run (MPI_Comm gcomm, int* np, uint64_t* sp, int timesteps, int va
 
     if(rank == 0) {
         avg_write = (double*) malloc(sizeof(double)*timesteps);
-        log.open("test_writer.log", std::ofstream::out | std::ofstream::trunc);
+        log.open(log_name, std::ofstream::out | std::ofstream::trunc);
         log << "step\twrite_gs" << std::endl;
     }
 
@@ -816,6 +840,8 @@ static int put_run (MPI_Comm gcomm, int* np, uint64_t* sp, int timesteps, int va
                 }
             }
         });
+
+        sleep(delay);
 
         Kokkos::Staging::set_version(v_S, ts);
 

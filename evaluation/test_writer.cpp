@@ -33,6 +33,8 @@ int main(int argc, char** argv)
     int timestep;
     size_t elem_size = 8;
     int num_vars = 1;
+    std::string log_name = "test_writer.log";
+    int delay = 0;
     bool terminate = false;
     app.add_option("--dims", dims, "number of data dimensions. Must be [1-8]")->required();
     app.add_option("--np", np, "the number of processes in the ith dimension. The product of np[0],"
@@ -45,6 +47,8 @@ int main(int argc, char** argv)
                     true);
     app.add_option("-c, --var_count", num_vars, "the number of variables written in each iteration."
                     "Defaults to 1", true);
+    app.add_option("--log", log_name, "output log file name. Default to test_writer.log", true);
+    app.add_option("--delay", delay, "sleep(delay) seconds in each timestep. Default to 0", true);
     app.add_option("-t", terminate, "send server termination after writing is complete", true);
 
     CLI11_PARSE(app, argc, argv);
@@ -86,12 +90,14 @@ int main(int argc, char** argv)
                 {
                 case 1:
                     kokkos_run<float, 1, Kokkos::LayoutLeft>::put_run(gcomm, np.data(), sp.data(),
-                                                                    timestep, num_vars, terminate);
+                                                                    timestep, num_vars, delay,
+                                                                    log_name, terminate);
                     break;
 
                 case 2:
                     kokkos_run<float, 1, Kokkos::LayoutRight>::put_run(gcomm, np.data(), sp.data(),
-                                                                    timestep, num_vars, terminate);
+                                                                    timestep, num_vars, delay,
+                                                                    log_name, terminate);
                     break;
                 
                 default:
@@ -104,12 +110,14 @@ int main(int argc, char** argv)
                 {
                 case 1:
                     kokkos_run<double, 1, Kokkos::LayoutLeft>::put_run(gcomm, np.data(), sp.data(),
-                                                                    timestep, num_vars, terminate);
+                                                                    timestep, num_vars, delay,
+                                                                    log_name, terminate);
                     break;
 
                 case 2:
                     kokkos_run<double, 1, Kokkos::LayoutRight>::put_run(gcomm, np.data(), sp.data(),
-                                                                    timestep, num_vars, terminate);
+                                                                    timestep, num_vars, delay,
+                                                                    log_name, terminate);
                     break;
                 
                 default:
@@ -130,12 +138,14 @@ int main(int argc, char** argv)
                 {
                 case 1:
                     kokkos_run<float, 2, Kokkos::LayoutLeft>::put_run(gcomm, np.data(), sp.data(),
-                                                                    timestep, num_vars, terminate);
+                                                                    timestep, num_vars, delay,
+                                                                    log_name, terminate);
                     break;
 
                 case 2:
                     kokkos_run<float, 2, Kokkos::LayoutRight>::put_run(gcomm, np.data(), sp.data(),
-                                                                    timestep, num_vars, terminate);
+                                                                    timestep, num_vars, delay,
+                                                                    log_name, terminate);
                     break;
                 
                 default:
@@ -148,12 +158,14 @@ int main(int argc, char** argv)
                 {
                 case 1:
                     kokkos_run<double, 2, Kokkos::LayoutLeft>::put_run(gcomm, np.data(), sp.data(),
-                                                                    timestep, num_vars, terminate);
+                                                                    timestep, num_vars, delay,
+                                                                    log_name, terminate);
                     break;
 
                 case 2:
                     kokkos_run<double, 2, Kokkos::LayoutRight>::put_run(gcomm, np.data(), sp.data(),
-                                                                    timestep, num_vars, terminate);
+                                                                    timestep, num_vars, delay,
+                                                                    log_name, terminate);
                     break;
                 
                 default:
@@ -174,12 +186,14 @@ int main(int argc, char** argv)
                 {
                 case 1:
                     kokkos_run<float, 3, Kokkos::LayoutLeft>::put_run(gcomm, np.data(), sp.data(),
-                                                                    timestep, num_vars, terminate);
+                                                                    timestep, num_vars, delay,
+                                                                    log_name, terminate);
                     break;
 
                 case 2:
                     kokkos_run<float, 3, Kokkos::LayoutRight>::put_run(gcomm, np.data(), sp.data(),
-                                                                    timestep, num_vars, terminate);
+                                                                    timestep, num_vars, delay,
+                                                                    log_name, terminate);
                     break;
                 
                 default:
@@ -192,12 +206,14 @@ int main(int argc, char** argv)
                 {
                 case 1:
                     kokkos_run<double, 3, Kokkos::LayoutLeft>::put_run(gcomm, np.data(), sp.data(),
-                                                                    timestep, num_vars, terminate);
+                                                                    timestep, num_vars, delay,
+                                                                    log_name, terminate);
                     break;
 
                 case 2:
                     kokkos_run<double, 3, Kokkos::LayoutRight>::put_run(gcomm, np.data(), sp.data(),
-                                                                    timestep, num_vars, terminate);
+                                                                    timestep, num_vars, delay,
+                                                                    log_name, terminate);
                     break;
                 
                 default:
@@ -218,12 +234,14 @@ int main(int argc, char** argv)
                 {
                 case 1:
                     kokkos_run<float, 4, Kokkos::LayoutLeft>::put_run(gcomm, np.data(), sp.data(),
-                                                                    timestep, num_vars, terminate);
+                                                                    timestep, num_vars, delay,
+                                                                    log_name, terminate);
                     break;
 
                 case 2:
                     kokkos_run<float, 4, Kokkos::LayoutRight>::put_run(gcomm, np.data(), sp.data(),
-                                                                    timestep, num_vars, terminate);
+                                                                    timestep, num_vars, delay,
+                                                                    log_name, terminate);
                     break;
                 
                 default:
@@ -236,12 +254,14 @@ int main(int argc, char** argv)
                 {
                 case 1:
                     kokkos_run<double, 4, Kokkos::LayoutLeft>::put_run(gcomm, np.data(), sp.data(),
-                                                                    timestep, num_vars, terminate);
+                                                                    timestep, num_vars, delay,
+                                                                    log_name, terminate);
                     break;
 
                 case 2:
                     kokkos_run<double, 4, Kokkos::LayoutRight>::put_run(gcomm, np.data(), sp.data(),
-                                                                    timestep, num_vars, terminate);
+                                                                    timestep, num_vars, delay,
+                                                                    log_name, terminate);
                     break;
                 
                 default:
@@ -262,12 +282,14 @@ int main(int argc, char** argv)
                 {
                 case 1:
                     kokkos_run<float, 5, Kokkos::LayoutLeft>::put_run(gcomm, np.data(), sp.data(),
-                                                                    timestep, num_vars, terminate);
+                                                                    timestep, num_vars, delay,
+                                                                    log_name, terminate);
                     break;
 
                 case 2:
                     kokkos_run<float, 5, Kokkos::LayoutRight>::put_run(gcomm, np.data(), sp.data(),
-                                                                    timestep, num_vars, terminate);
+                                                                    timestep, num_vars, delay,
+                                                                    log_name, terminate);
                     break;
                 
                 default:
@@ -280,12 +302,14 @@ int main(int argc, char** argv)
                 {
                 case 1:
                     kokkos_run<double, 5, Kokkos::LayoutLeft>::put_run(gcomm, np.data(), sp.data(),
-                                                                    timestep, num_vars, terminate);
+                                                                    timestep, num_vars, delay,
+                                                                    log_name, terminate);
                     break;
 
                 case 2:
                     kokkos_run<double, 5, Kokkos::LayoutRight>::put_run(gcomm, np.data(), sp.data(),
-                                                                    timestep, num_vars, terminate);
+                                                                    timestep, num_vars, delay,
+                                                                    log_name, terminate);
                     break;
                 
                 default:
@@ -306,12 +330,14 @@ int main(int argc, char** argv)
                 {
                 case 1:
                     kokkos_run<float, 6, Kokkos::LayoutLeft>::put_run(gcomm, np.data(), sp.data(),
-                                                                    timestep, num_vars, terminate);
+                                                                    timestep, num_vars, delay,
+                                                                    log_name, terminate);
                     break;
 
                 case 2:
                     kokkos_run<float, 6, Kokkos::LayoutRight>::put_run(gcomm, np.data(), sp.data(),
-                                                                    timestep, num_vars, terminate);
+                                                                    timestep, num_vars, delay,
+                                                                    log_name, terminate);
                     break;
                 
                 default:
@@ -324,12 +350,14 @@ int main(int argc, char** argv)
                 {
                 case 1:
                     kokkos_run<double, 6, Kokkos::LayoutLeft>::put_run(gcomm, np.data(), sp.data(),
-                                                                    timestep, num_vars, terminate);
+                                                                    timestep, num_vars, delay,
+                                                                    log_name, terminate);
                     break;
 
                 case 2:
                     kokkos_run<double, 6, Kokkos::LayoutRight>::put_run(gcomm, np.data(), sp.data(),
-                                                                    timestep, num_vars, terminate);
+                                                                    timestep, num_vars, delay,
+                                                                    log_name, terminate);
                     break;
                 
                 default:
@@ -350,12 +378,14 @@ int main(int argc, char** argv)
                 {
                 case 1:
                     kokkos_run<float, 7, Kokkos::LayoutLeft>::put_run(gcomm, np.data(), sp.data(),
-                                                                    timestep, num_vars, terminate);
+                                                                    timestep, num_vars, delay,
+                                                                    log_name, terminate);
                     break;
 
                 case 2:
                     kokkos_run<float, 7, Kokkos::LayoutRight>::put_run(gcomm, np.data(), sp.data(),
-                                                                    timestep, num_vars, terminate);
+                                                                    timestep, num_vars, delay,
+                                                                    log_name, terminate);
                     break;
                 
                 default:
@@ -368,12 +398,14 @@ int main(int argc, char** argv)
                 {
                 case 1:
                     kokkos_run<double, 7, Kokkos::LayoutLeft>::put_run(gcomm, np.data(), sp.data(),
-                                                                    timestep, num_vars, terminate);
+                                                                    timestep, num_vars, delay,
+                                                                    log_name, terminate);
                     break;
 
                 case 2:
                     kokkos_run<double, 7, Kokkos::LayoutRight>::put_run(gcomm, np.data(), sp.data(),
-                                                                    timestep, num_vars, terminate);
+                                                                    timestep, num_vars, delay,
+                                                                    log_name, terminate);
                     break;
                 
                 default:
@@ -394,12 +426,14 @@ int main(int argc, char** argv)
                 {
                 case 1:
                     kokkos_run<float, 8, Kokkos::LayoutLeft>::put_run(gcomm, np.data(), sp.data(),
-                                                                    timestep, num_vars, terminate);
+                                                                    timestep, num_vars, delay,
+                                                                    log_name, terminate);
                     break;
 
                 case 2:
                     kokkos_run<float, 8, Kokkos::LayoutRight>::put_run(gcomm, np.data(), sp.data(),
-                                                                    timestep, num_vars, terminate);
+                                                                    timestep, num_vars, delay,
+                                                                    log_name, terminate);
                     break;
                 
                 default:
@@ -412,12 +446,14 @@ int main(int argc, char** argv)
                 {
                 case 1:
                     kokkos_run<double, 8, Kokkos::LayoutLeft>::put_run(gcomm, np.data(), sp.data(),
-                                                                    timestep, num_vars, terminate);
+                                                                    timestep, num_vars, delay,
+                                                                    log_name, terminate);
                     break;
 
                 case 2:
                     kokkos_run<double, 8, Kokkos::LayoutRight>::put_run(gcomm, np.data(), sp.data(),
-                                                                    timestep, num_vars, terminate);
+                                                                    timestep, num_vars, delay,
+                                                                    log_name, terminate);
                     break;
                 
                 default:
