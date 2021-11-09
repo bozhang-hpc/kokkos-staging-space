@@ -77,6 +77,7 @@ class StagingSpace {
   void deallocate(void * const arg_alloc_ptr, const size_t arg_alloc_size) const;
 
   static void initialize();
+  static void initialize(MPI_Comm comm);
   static void finalize();
   static void terminate();
 
@@ -127,7 +128,7 @@ private:
   uint64_t* ub;         // coordinates for the upper corner of the local bounding box.
   //int mpi_size;
   //int mpi_rank;
-  MPI_Comm gcomm;
+  
 
   size_t data_size;
   std::string var_name;
@@ -136,7 +137,9 @@ private:
   enum ds_layout_type m_layout;
   int m_timeout;
 
+  
   static dspaces_client_t ndcl;
+  static MPI_Comm gcomm;
   static constexpr const char* m_name = "Staging";
   bool m_is_initialized;
   friend class Kokkos::Impl::SharedAllocationRecord< Kokkos::StagingSpace, void>;

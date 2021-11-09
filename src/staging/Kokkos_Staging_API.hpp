@@ -11,6 +11,10 @@ inline void initialize() {
     Kokkos::StagingSpace::initialize();
 }
 
+inline void initialize(MPI_Comm comm) {
+    Kokkos::StagingSpace::initialize(comm);
+}
+
 inline void finalize() {
     Kokkos::StagingSpace::finalize();
 }

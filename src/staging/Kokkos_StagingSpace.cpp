@@ -12,6 +12,7 @@
 
 namespace Kokkos {
 
+MPI_Comm StagingSpace::gcomm = MPI_COMM_WORLD;
 dspaces_client_t StagingSpace::ndcl = dspaces_CLIENT_NULL;
 
 std::string StagingSpace::get_timestep(std::string path, size_t& ts) {
@@ -58,7 +59,7 @@ StagingSpace::StagingSpace(): rank(1),
                               //ub{0,0,0,0,0,0,0,0},
                               //mpi_size(1),
                               //mpi_rank(0),
-                              gcomm(MPI_COMM_WORLD),
+                              // gcomm(MPI_COMM_WORLD),
                               m_timeout(-1),
                               m_is_initialized(false) { }
 
@@ -72,7 +73,7 @@ StagingSpace::StagingSpace(StagingSpace&& rhs) {
   ub = (uint64_t*) malloc(rank*sizeof(uint64_t));
   memcpy(lb, rhs.lb, rank*sizeof(uint64_t));
   memcpy(ub, rhs.ub, rank*sizeof(uint64_t));
-  gcomm = rhs.gcomm;
+  // gcomm = rhs.gcomm;
   data_size = rhs.data_size;
   var_name = rhs.var_name;
   is_contiguous = rhs.is_contiguous;
@@ -92,7 +93,7 @@ StagingSpace::StagingSpace(const StagingSpace& rhs) {
   ub = (uint64_t*) malloc(rank*sizeof(uint64_t));
   memcpy(lb, rhs.lb, rank*sizeof(uint64_t));
   memcpy(ub, rhs.ub, rank*sizeof(uint64_t));
-  gcomm = rhs.gcomm;
+  // gcomm = rhs.gcomm;
   data_size = rhs.data_size;
   var_name = rhs.var_name;
   is_contiguous = rhs.is_contiguous;
@@ -112,7 +113,7 @@ StagingSpace& StagingSpace::operator=(StagingSpace&& rhs) {
   ub = (uint64_t*) malloc(rank*sizeof(uint64_t));
   memcpy(lb, rhs.lb, rank*sizeof(uint64_t));
   memcpy(ub, rhs.ub, rank*sizeof(uint64_t));
-  gcomm = rhs.gcomm;
+  // gcomm = rhs.gcomm;
   data_size = rhs.data_size;
   var_name = rhs.var_name;
   is_contiguous = rhs.is_contiguous;
@@ -133,7 +134,7 @@ StagingSpace& StagingSpace::operator=(const StagingSpace &rhs) {
   ub = (uint64_t*) malloc(rank*sizeof(uint64_t));
   memcpy(lb, rhs.lb, rank*sizeof(uint64_t));
   memcpy(ub, rhs.ub, rank*sizeof(uint64_t));
-  gcomm = rhs.gcomm;
+  // gcomm = rhs.gcomm;
   data_size = rhs.data_size;
   var_name = rhs.var_name;
   is_contiguous = rhs.is_contiguous;
@@ -145,11 +146,18 @@ StagingSpace& StagingSpace::operator=(const StagingSpace &rhs) {
 }
 
 void StagingSpace::initialize() {
-  int mpi_rank, mpi_size;
-  MPI_Comm_size( MPI_COMM_WORLD, &mpi_size );
-  MPI_Comm_rank( MPI_COMM_WORLD, &mpi_rank);
+  // int mpi_rank, mpi_size;
+  // MPI_Comm_size(MPI_COMM_WORLD, &mpi_size);
+  // MPI_Comm_rank(MPI_COMM_WORLD, &mpi_rank);
+  gcomm = MPI_COMM_WORLD;
   ndcl = dspaces_CLIENT_NULL;
-  dspaces_init(mpi_rank, &ndcl);
+  dspaces_init_mpi(gcomm, &ndcl);
+}
+
+void StagingSpace::initialize(MPI_Comm comm) {
+  gcomm = comm;
+  ndcl = dspaces_CLIENT_NULL;
+  dspaces_init_mpi(gcomm, &ndcl);
 }
 
 void StagingSpace::finalize() {
@@ -234,7 +242,7 @@ void StagingSpace::deallocate(void * const arg_alloc_ptr
 size_t StagingSpace::write_data(const void* src, const size_t src_size){
   size_t m_written = 0;
   //dspaces_lock_on_write(var_name.c_str(), &gcomm);
-  int err = dspaces_put_layout(ndcl, var_name.c_str(), version, elem_size, rank, lb, ub, m_layout, src);
+  int err = dspaces_put_layout_new(ndcl, var_name.c_str(), version, elem_size, rank, lb, ub, m_layout, src);
   //dspaces_unlock_on_write(var_name.c_str(), &gcomm);
   if(err == 0) {
     m_written = src_size;
@@ -247,7 +255,7 @@ size_t StagingSpace::write_data(const void* src, const size_t src_size){
 size_t StagingSpace::read_data(void * dst, const size_t dst_size) {
   size_t dataRead = 0;
   //dspaces_lock_on_read(var_name.c_str(), &gcomm);
-  int err = dspaces_get_layout(ndcl, var_name.c_str(), version, elem_size, rank, lb, ub, m_layout, dst, m_timeout);
+  int err = dspaces_get_layout_new(ndcl, var_name.c_str(), version, elem_size, rank, lb, ub, m_layout, dst, m_timeout);
   //dspaces_unlock_on_read(var_name.c_str(), &gcomm);
   if(err == 0) {
     dataRead = dst_size; 
