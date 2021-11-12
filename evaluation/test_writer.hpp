@@ -64,6 +64,9 @@ static int put_run (MPI_Comm gcomm, int* np, uint64_t* sp, int timesteps, int va
             v_P(i0) = i0 + 0.01*ts;         
         });
 
+        // 1s sleep as the lightest computation overhead
+        sleep(1);
+
         sleep(delay);
 
         Kokkos::Staging::set_version(v_S, ts);
