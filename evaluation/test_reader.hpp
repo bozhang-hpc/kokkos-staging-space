@@ -287,15 +287,15 @@ static int get_run (MPI_Comm gcomm, int* np, uint64_t* sp, int timesteps, int va
             free(avg_time_read);
         }
 
-        Kokkos::parallel_for(sp[0], KOKKOS_LAMBDA(const int i0) {
-            for(int i1=0; i1<sp[1]; i1++) {
-                for(int i2=0; i2<sp[2]; i2++) {
-                    std::cout<<v_G(i0,i1,i2)<<"\t";
-                }
-                std::cout<<std::endl;
-            }
-            std::cout<<"******************"<<std::endl;
-        });
+        // Kokkos::parallel_for(sp[0], KOKKOS_LAMBDA(const int i0) {
+        //     for(int i1=0; i1<sp[1]; i1++) {
+        //         for(int i2=0; i2<sp[2]; i2++) {
+        //             std::cout<<v_G(i0,i1,i2)<<"\t";
+        //         }
+        //         std::cout<<std::endl;
+        //     }
+        //     std::cout<<"******************"<<std::endl;
+        // });
     }
 
     free(off);
