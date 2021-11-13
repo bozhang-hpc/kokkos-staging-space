@@ -171,6 +171,9 @@ static int put_run (MPI_Comm gcomm, int* np, uint64_t* sp, int timesteps, int va
             }
         });
 
+        // 1s sleep as the lightest computation overhead
+        sleep(1);
+
         sleep(delay);
 
         Kokkos::Staging::set_version(v_S, ts);
@@ -280,6 +283,9 @@ static int put_run (MPI_Comm gcomm, int* np, uint64_t* sp, int timesteps, int va
             //std::cout<<"******************"<<std::endl;
         });
 
+        // 1s sleep as the lightest computation overhead
+        sleep(1);
+
         sleep(delay);
 
         Kokkos::Staging::set_version(v_S, ts);
@@ -387,6 +393,9 @@ static int put_run (MPI_Comm gcomm, int* np, uint64_t* sp, int timesteps, int va
                 }
             }
         });
+
+        // 1s sleep as the lightest computation overhead
+        sleep(1);
 
         sleep(delay);
 
@@ -497,6 +506,9 @@ static int put_run (MPI_Comm gcomm, int* np, uint64_t* sp, int timesteps, int va
                 }
             }
         });
+
+        // 1s sleep as the lightest computation overhead
+        sleep(1);
 
         sleep(delay);
 
@@ -610,6 +622,9 @@ static int put_run (MPI_Comm gcomm, int* np, uint64_t* sp, int timesteps, int va
                 }
             }
         });
+
+        // 1s sleep as the lightest computation overhead
+        sleep(1);
 
         sleep(delay);
 
@@ -725,6 +740,9 @@ static int put_run (MPI_Comm gcomm, int* np, uint64_t* sp, int timesteps, int va
                 }
             }
         });
+
+        // 1s sleep as the lightest computation overhead
+        sleep(1);
 
         sleep(delay);
 
@@ -843,6 +861,9 @@ static int put_run (MPI_Comm gcomm, int* np, uint64_t* sp, int timesteps, int va
                 }
             }
         });
+
+        // 1s sleep as the lightest computation overhead
+        sleep(1);
 
         sleep(delay);
 
