@@ -267,6 +267,9 @@ static int get_run (MPI_Comm gcomm, int* np, uint64_t* sp, uint64_t* offset, int
 
         double time_read = timer_read.stop();
 
+        // 1s sleep as the lightest computation overhead
+        sleep(1);
+
         sleep(delay);
 
         double *avg_time_read = nullptr;
