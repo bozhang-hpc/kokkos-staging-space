@@ -4,7 +4,7 @@
 #include <string>
 #include "CLI11.hpp"
 #include "mpi.h"
-#include "test_reader.hpp"
+#include "test_reader_scav4.hpp"
 
 void print_usage()
 {
